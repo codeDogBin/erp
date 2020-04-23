@@ -2,8 +2,8 @@ package com.my.erp.sys.cache;
 
 import com.my.erp.sys.domain.Dept;
 import com.my.erp.sys.domain.User;
-import com.my.erp.sys.vo.DeptVo;
-import com.my.erp.sys.vo.UserVo;
+
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -68,15 +68,15 @@ public class CacheAspect {
     @Around(value=POINTCUT_DEPT_UPDATE)
     public Object cacheDeptUpdate(ProceedingJoinPoint joinPoint) throws Throwable {
         //取出第一个参数
-        DeptVo deptVo = (DeptVo) joinPoint.getArgs()[0];
+        Dept dept = (Dept) joinPoint.getArgs()[0];
         Boolean isSuccess = (Boolean) joinPoint.proceed();
         if (isSuccess) {
-            Dept dept = (Dept) CACHE_CONTAINER.get(deptVo.getId());
-            if (null == dept) {
-                dept = new Dept();
-                BeanUtils.copyProperties(deptVo, dept);
-                log.info("部门对象缓存已更新"+CACHE_DEPT_PROFIX + dept.getId());
-                CACHE_CONTAINER.put(CACHE_DEPT_PROFIX + dept.getId(), dept);
+            Dept newdept = (Dept) CACHE_CONTAINER.get(dept.getId());
+            if (null == newdept) {
+                newdept = new Dept();
+                BeanUtils.copyProperties(dept, newdept);
+                log.info("部门对象缓存已更新"+CACHE_DEPT_PROFIX + newdept.getId());
+                CACHE_CONTAINER.put(CACHE_DEPT_PROFIX + newdept.getId(), newdept);
             }
         }
         return isSuccess;
@@ -91,7 +91,7 @@ public class CacheAspect {
     @Around(value=POINTCUT_DEPT_ADD)
     public Object cacheDeptAdd(ProceedingJoinPoint joinPoint) throws Throwable {
         //取出第一个参数
-        Dept dept = (DeptVo) joinPoint.getArgs()[0];
+        Dept dept = (Dept) joinPoint.getArgs()[0];
         //执行目标方法
         Boolean isSuccess = (Boolean) joinPoint.proceed();
         if (isSuccess) {
@@ -165,15 +165,15 @@ public class CacheAspect {
     @Around(value=POINTCUT_USER_UPDATE)
     public Object cacheUserUpdate(ProceedingJoinPoint joinPoint) throws Throwable {
         //取出第一个参数
-        UserVo userVo = (UserVo) joinPoint.getArgs()[0];
+        User user = (User) joinPoint.getArgs()[0];
         Boolean isSuccess = (Boolean) joinPoint.proceed();
         if (isSuccess) {
-            User user = (User) CACHE_CONTAINER.get(userVo.getId());
-            if (null == user) {
-                user = new User();
-                BeanUtils.copyProperties(userVo, user);
-                log.info("用户对象缓存已更新"+CACHE_USER_PROFIX + user.getId());
-                CACHE_CONTAINER.put(CACHE_USER_PROFIX + user.getId(), user);
+            User newuser = (User) CACHE_CONTAINER.get(user.getId());
+            if (null == newuser) {
+                newuser = new User();
+                BeanUtils.copyProperties(user, newuser);
+                log.info("用户对象缓存已更新"+CACHE_USER_PROFIX + newuser.getId());
+                CACHE_CONTAINER.put(CACHE_USER_PROFIX + newuser.getId(), newuser);
             }
         }
         return isSuccess;
@@ -188,7 +188,7 @@ public class CacheAspect {
     @Around(value=POINTCUT_USER_ADD)
     public Object cacheUserAdd(ProceedingJoinPoint joinPoint) throws Throwable {
         //取出第一个参数
-        User user = (UserVo) joinPoint.getArgs()[0];
+        User user = (User) joinPoint.getArgs()[0];
         //执行目标方法
         Boolean isSuccess = (Boolean) joinPoint.proceed();
         if (isSuccess) {

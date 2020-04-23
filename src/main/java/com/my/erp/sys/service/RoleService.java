@@ -28,4 +28,6 @@ public interface RoleService extends IService<Role> {
      * @param ids
      */
     void saveRolePermission(Integer roleId, Integer[] ids);
+
+    List<Integer> selectUserRoleIdsByUserId(Integer id);
 }

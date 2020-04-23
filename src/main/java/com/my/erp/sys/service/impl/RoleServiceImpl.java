@@ -52,4 +52,11 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
 
     }
 
+    @Override
+    public List<Integer> selectUserRoleIdsByUserId(Integer id) {
+        RoleMapper roleMapper = this.getBaseMapper();
+        //先将数据库中的权限都删掉
+        return roleMapper.selectUserRoleIdsByUserId(id);
+    }
+
 }

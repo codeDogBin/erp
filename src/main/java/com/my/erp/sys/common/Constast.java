@@ -27,4 +27,7 @@ public interface Constast {
      */
     Integer OPEN_TRUE = 1;
     Integer OPEN_FALSE = 0;
+
+    //默认密码
+    String USER_DEFAULT_PWD="123456";
 }

@@ -31,4 +31,9 @@ public interface RoleMapper extends BaseMapper<Role> {
 
     @Insert("insert into sys_role_permission (rid,pid) values(#{rid} ,#{pid}) ")
     void saveRolePermission(@Param("rid")Integer roleId, @Param("pid") Integer pid);
+
+    @Select("select rid from sys_role_user where uid = #{id}")
+    List<Integer> selectUserRoleIdsByUserId(Integer id);
+
+
 }
