@@ -1,5 +1,9 @@
 package com.my.erp.sys.controller;
 
+import cn.hutool.captcha.CaptchaUtil;
+import cn.hutool.captcha.LineCaptcha;
+import cn.hutool.core.lang.Console;
+import com.baomidou.mybatisplus.extension.api.R;
 import com.my.erp.sys.common.ActiverUser;
 import com.my.erp.sys.common.ResultObj;
 import com.my.erp.sys.domain.Loginfo;
@@ -9,11 +13,15 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.lang.model.element.NestingKind;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.util.Date;
 
 @RestController
@@ -21,9 +29,23 @@ import java.util.Date;
 public class LoginController {
     @Autowired
     private LoginfoService loginfoService;
+    //hutool验证码工具
+    private LineCaptcha lineCaptcha;
 
+    /**
+     * 登录功能
+     * @param loginname
+     * @param pwd
+     * @param captcha
+     * @param request
+     * @return
+     */
     @RequestMapping("/login")
-    public ResultObj login(String loginname, String pwd, HttpServletRequest request){
+    public ResultObj login(String loginname, String pwd, String captcha, HttpServletRequest request){
+
+        if(!lineCaptcha.verify(captcha)){
+          return ResultObj.LOGIN_ERROR_CODE;//返回验证码错误
+        }
         Subject subject = SecurityUtils.getSubject();//获取subject对象
         UsernamePasswordToken token = new UsernamePasswordToken(loginname, pwd);//将永明和密码设置为令牌
         try {
@@ -44,4 +66,19 @@ public class LoginController {
             return ResultObj.LOGIN_ERROR_PASS;//返回登陆失败
         }
     }
+
+    /**
+     * 获取验证码的接口
+     * @param response
+     * @param session
+     * @throws IOException
+     */
+    @RequestMapping("getCaptcha")
+    public void getCaptcha(HttpServletResponse response,HttpSession session) throws IOException {
+       lineCaptcha = CaptchaUtil.createLineCaptcha(100, 36);
+       lineCaptcha.write(response.getOutputStream());
+    }
+
+
+
 }

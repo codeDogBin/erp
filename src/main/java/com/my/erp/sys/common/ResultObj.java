@@ -29,6 +29,10 @@ public class ResultObj {
     //重置
     public static final ResultObj RESET_SUCCESS = new ResultObj(Constast.OK,"重置成功");
     public static final ResultObj RESET_ERROR = new ResultObj(Constast.ERROR,"重置失败");
+    //操作
+    public static final ResultObj OPERATE_SUCCESS = new ResultObj(Constast.OK,"操作成功");
+    public static final ResultObj OPERATE_ERROR = new ResultObj(Constast.ERROR,"操作失败");
+
     private Integer code;
     private String msg;
 }

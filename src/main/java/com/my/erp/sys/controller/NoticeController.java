@@ -79,6 +79,12 @@ public class NoticeController {
         }
     }
 
+    /**
+     * 修改公告
+     * @param noticeVo
+     * @param session
+     * @return
+     */
     @RequestMapping("/updateNotice")
     public ResultObj updateNotice(NoticeVo noticeVo, HttpSession session){
         try {
@@ -92,7 +98,7 @@ public class NoticeController {
     }
 
     /**
-     *
+     * 批量删除公告
      * @param noticeVo
      * @return
      */
@@ -109,7 +115,7 @@ public class NoticeController {
     }
 
     /**
-     *
+     * 删除公告
      * @param id
      * @return
      */

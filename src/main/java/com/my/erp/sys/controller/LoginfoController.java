@@ -74,7 +74,7 @@ public class LoginfoController {
     }
 
     /**
-     * 删除
+     * 批量删除删除
      */
     @RequestMapping("batchDeleteLoginfo")
     public ResultObj batchDeleteLoginfo(LoginfoVo loginfoVo){

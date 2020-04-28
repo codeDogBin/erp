@@ -31,6 +31,7 @@ import java.util.*;
 @RestController
 @RequestMapping("/dept")
 public class DeptController {
+
     @Autowired
     private DeptService deptService;
 

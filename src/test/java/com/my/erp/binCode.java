@@ -61,7 +61,7 @@ public class binCode {
         PackageConfig pc = new PackageConfig();
         pc.setEntity("domain");
         //需要设置的模块名****************
-        pc.setModuleName("sys");
+        pc.setModuleName("bus");
         //需要设置的父包名*************
         pc.setParent("com.my.erp");
         mpg.setPackageInfo(pc);

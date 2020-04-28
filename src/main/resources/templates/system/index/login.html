@@ -26,8 +26,8 @@
 		</div>
 		<div class="layui-form-item input-item" id="imgCode">
 			<label for="code">验证码</label>
-			<input type="text" placeholder="请输入验证码" autocomplete="off" id="code" class="layui-input">
-			<img src="/resources/images/code.jpg">
+			<input type="text" name="captcha" placeholder="请输入验证码" autocomplete="off" id="code" class="layui-input">
+			<img src="/login/getCaptcha" id="img">
 		</div>
 		<div class="layui-form-item">
 			<button class="layui-btn layui-block" lay-filter="login" lay-submit>登录</button>
@@ -89,6 +89,12 @@
 	            $(this).parent().removeClass("layui-input-active");
 	        }
 	    })
+
+		$('#img').on('click',function() {
+				console.log('点击触发了');
+				$('#img').attr('src',"/login/getCaptcha?"+new Date().getTime());
+		})
+
 	})
 
 	</script>

@@ -11,6 +11,8 @@ import com.my.erp.sys.domain.Permission;
 import com.my.erp.sys.domain.User;
 import com.my.erp.sys.service.PermissionService;
 
+import com.my.erp.sys.service.RoleService;
+import com.my.erp.sys.service.UserService;
 import com.my.erp.sys.vo.PermissionVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,27 +37,44 @@ public class MenuController {
     @Autowired
     private PermissionService permissionService;
 
+
+    @Autowired
+    private RoleService roleService;
+
     /**
      * 加载左侧菜单
-     * @param permissionVo
      * @param session
      * @return
      */
     @RequestMapping("/loadIndexLeftMenuJson")
-    public DataGridView loadIndexLeftMenuJson(PermissionVo permissionVo, HttpSession session){
+    public DataGridView loadIndexLeftMenuJson(HttpSession session){
         //查询所有菜单
         QueryWrapper<Permission> queryWrapper = new QueryWrapper<>();
         //设置只需要查询菜单
         queryWrapper.eq("type", Constast.TYPE_MENU);
-        //设置可以
+        //设置可以使用
         queryWrapper.eq("available",Constast.AVAILABLE_TRUE);
         User user = (User) session.getAttribute("user");
         List<Permission> list = null;
         if(user.getType() ==Constast.USER_TYPE_SUPER){//如果是超管用户
              list  = permissionService.list(queryWrapper);
         }else{
-            //根据用户ID+角色+权限查询 暂时没有做
-            list  = permissionService.list(queryWrapper);
+            //根据用户ID+角色+权限查询
+            Integer uid = user.getId();
+            //根据用户ID查询角色ID
+            List<Integer> currentUserRoleIds = roleService.selectUserRoleIdsByUserId(uid);
+            //根据角色获取权限和菜单ID
+            Set<Integer> pids = new HashSet<>();
+            for (Integer roleId : currentUserRoleIds) {
+                List<Integer> permissionIds = roleService.selectRolePermissionByRole(roleId);
+                pids.addAll(permissionIds);
+            }
+            if(pids.size()>0){
+                queryWrapper.in("id",pids);
+                list  = permissionService.list(queryWrapper);
+            }else{
+                list = new ArrayList<>();
+            }
         }
         List<TreeNode> treeNodes = new ArrayList<>();
         for (Permission permission : list) {
