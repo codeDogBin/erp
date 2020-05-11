@@ -14,6 +14,8 @@ import com.my.erp.sys.service.impl.PermissionServiceImpl;
 import com.my.erp.sys.vo.PermissionVo;
 import com.sun.org.apache.regexp.internal.RE;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -37,6 +39,7 @@ import java.util.Map;
 @RequestMapping("/permission")
 public class PermissionController {
 
+    private final static Logger logger = LoggerFactory.getLogger(PermissionController.class);
     @Autowired
     private PermissionService permissionService;
 
@@ -70,7 +73,7 @@ public class PermissionController {
         //设置条件
         queryWrapper.eq("type",Constast.TYPE_PERMISSION);
         queryWrapper.like(StringUtils.isNoneBlank(permissionVo.getTitle()),"title",permissionVo.getTitle());
-        queryWrapper.like(StringUtils.isNoneBlank(permissionVo.getPercode()),"percode",permissionVo.getTitle());
+        queryWrapper.like(StringUtils.isNoneBlank(permissionVo.getPercode()),"percode",permissionVo.getPercode());
         queryWrapper.eq(permissionVo.getId()!=null,"id",permissionVo.getId()).or().eq(permissionVo.getId()!=null,"pid",permissionVo.getId());
         queryWrapper.orderByAsc("ordernum");
         //查询
@@ -90,6 +93,7 @@ public class PermissionController {
             permissionService.save(permissionVo);
             return ResultObj.ADD_SUCCESS;
         } catch (Exception e) {
+            logger.error(e.toString());
             e.printStackTrace();
             return ResultObj.ADD_ERROR;
         }
@@ -107,6 +111,7 @@ public class PermissionController {
             permissionService.updateById(permissionVo);
             return ResultObj.UPDATE_SUCCESS;
         } catch (Exception e) {
+            logger.error(e.toString());
             e.printStackTrace();
             return ResultObj.UPDATE_ERROR;
         }
@@ -123,7 +128,6 @@ public class PermissionController {
         queryWrapper.orderByDesc("ordernum");
         IPage<Permission> page=new Page<>(1,1);
         List<Permission> list = permissionService.page(page,queryWrapper).getRecords();
-        System.out.println(list);
         if(list.size()>0){
             map.put("value",list.get(0).getOrdernum()+1);
         }else{
@@ -143,10 +147,13 @@ public class PermissionController {
             permissionService.removeById(permissionVo.getId());
             return ResultObj.DELETE_SUCCESS;
         } catch (Exception e) {
+            logger.error(e.toString());
             e.printStackTrace();
             return ResultObj.DELETE_ERROR;
         }
     }
+
+
 
 
 }

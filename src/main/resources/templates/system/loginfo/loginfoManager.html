@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head>
     <meta charset="UTF-8">
     <title>日志管理</title>
@@ -60,14 +61,14 @@
 <!--查询条件结束-->
 <!--数据表格开始-->
 <div>
-    <table class="layui-hide" id="loginfoTable" lay-filter="loginfoTable" >
+    <table class="layui-hide" shiro:hasPermission="info:view" id="loginfoTable" lay-filter="loginfoTable" >
         <!--头工具条-->
         <div id="loginfoToolBar" style="display:none">
-            <button type="button" lay-event="batchDelete" class="layui-btn layui-btn-danger  layui-btn-sm"><span class="layui-icon layui-icon-delete">批量删除</span></button>
+            <button type="button" shiro:hasPermission="info:batchdelete" lay-event="batchDelete" class="layui-btn layui-btn-danger  layui-btn-sm"><span class="layui-icon layui-icon-delete">批量删除</span></button>
         </div>
         <!--行工具条-->
         <div id="loginfoRowBar" style="display:none">
-            <button type="button" lay-event="delete" class="layui-btn layui-btn-danger  layui-btn-xs"><span class="layui-icon layui-icon-delete">删除</span></button>
+            <button type="button" shiro:hasPermission="info:delete" lay-event="delete" class="layui-btn layui-btn-danger  layui-btn-xs"><span class="layui-icon layui-icon-delete">删除</span></button>
         </div>
     </table>
 </div>

@@ -15,8 +15,11 @@ import com.my.erp.sys.common.Constast;
 import com.my.erp.sys.common.DataGridView;
 import com.my.erp.sys.common.MyFileUtils;
 import com.my.erp.sys.common.ResultObj;
+import com.my.erp.sys.config.Log;
 import com.my.erp.sys.domain.User;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.server.Session;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,6 +41,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/inport")
 public class InportController {
+    private final static Logger logger = LoggerFactory.getLogger(ProviderController.class);
+
     @Autowired
     private InportService inportService;
 
@@ -90,7 +95,7 @@ public class InportController {
      * @param inportVo
      * @return
      */
-
+    @Log("添加进货单")
     @RequestMapping("/addInport")
     public ResultObj addInport(InportVo inportVo, HttpSession session) {
         try {
@@ -111,6 +116,7 @@ public class InportController {
      * @param inportVo
      * @return
      */
+    @Log("修改进货单")
     @RequestMapping("/updateInport")
     public ResultObj updateInport(InportVo inportVo) {
         try {
@@ -130,6 +136,7 @@ public class InportController {
      * @param id
      * @return
      */
+    @Log("删除进货单")
     @RequestMapping("/deleteInport")
     public ResultObj batchDeleteInport(Integer id) {
         try {

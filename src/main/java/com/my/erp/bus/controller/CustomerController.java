@@ -12,17 +12,23 @@ import com.my.erp.bus.vo.CustomerVo;
 import com.my.erp.sys.common.Constast;
 import com.my.erp.sys.common.DataGridView;
 import com.my.erp.sys.common.ResultObj;
+import com.my.erp.sys.config.Log;
+import com.my.erp.sys.config.LogAspect;
 import com.my.erp.sys.domain.Notice;
 import com.my.erp.sys.domain.User;
 import com.my.erp.sys.vo.NoticeVo;
+import com.sun.xml.internal.bind.v2.model.core.ID;
 import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
+import java.lang.annotation.Target;
 import java.util.Date;
 import java.util.List;
 
@@ -37,6 +43,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/customer")
 public class CustomerController {
+
+    private final static Logger logger = org.slf4j.LoggerFactory.getLogger(CustomerController.class);
 
     @Autowired
     private CustomerService customerService;
@@ -64,17 +72,17 @@ public class CustomerController {
     /**
      * 添加客户
      * @param customerVo
-     * @param session
      * @return
      */
-
+    @Log("添加客户")
     @RequestMapping("/addCustomer")
-    public ResultObj addCustomer(CustomerVo customerVo, HttpSession session){
+    public ResultObj addCustomer(CustomerVo customerVo){
         try {
             customerService.save(customerVo);
             return ResultObj.ADD_SUCCESS;
         } catch (Exception e) {
             e.printStackTrace();
+            logger.error(e.toString());
             return ResultObj.ADD_ERROR;
         }
     }
@@ -85,6 +93,7 @@ public class CustomerController {
      * @param session
      * @return
      */
+    @Log("修改客户")
     @RequestMapping("/updateCustomer")
     public ResultObj updateCustomer(CustomerVo customerVo, HttpSession session){
         try {
@@ -92,6 +101,7 @@ public class CustomerController {
             return ResultObj.UPDATE_SUCCESS;
         } catch (Exception e) {
             e.printStackTrace();
+            logger.error(e.toString());
             return ResultObj.UPDATE_ERROR;
         }
     }
@@ -101,14 +111,23 @@ public class CustomerController {
      * @param customerVo
      * @return
      */
+    @Log("批量删除客户")
+    @Transactional
     @RequestMapping("/batchDeleteCustomer")
     public ResultObj batchDeleteCustomer(CustomerVo customerVo){
         try {
             List<Integer> ids = Convert.toList(Integer.class, customerVo.getIds());
+            for (Integer id : ids) {
+                Integer integer = customerService.getccByCusId(id);
+                if(integer!=0){
+                    return ResultObj.DELETE_ERROR;
+                }
+            }
             customerService.removeByIds(ids);
             return ResultObj.DELETE_SUCCESS;
         } catch (Exception e) {
             e.printStackTrace();
+            logger.error(e.toString());
             return  ResultObj.DELETE_ERROR;
         }
     }
@@ -118,13 +137,19 @@ public class CustomerController {
      * @param id
      * @return
      */
+    @Log("删除客户")
     @RequestMapping("/deleteCustomer")
     public ResultObj batchDeleteCustomer(Integer id){
         try {
+            Integer integer = customerService.getccByCusId(id);
+            if(integer!=0){
+                return ResultObj.DELETE_ERROR;
+            }
             customerService.removeById(id);
             return ResultObj.DELETE_SUCCESS;
         } catch (Exception e) {
             e.printStackTrace();
+            logger.error(e.toString());
             return  ResultObj.DELETE_ERROR;
         }
     }

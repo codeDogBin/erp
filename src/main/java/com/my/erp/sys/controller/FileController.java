@@ -2,6 +2,7 @@ package com.my.erp.sys.controller;
 
 import cn.hutool.core.date.DateUtil;
 import com.my.erp.sys.common.MyFileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -56,8 +57,10 @@ public class FileController {
      */
     @RequestMapping("showImageByPath")
     public ResponseEntity  showImageByPath(String path){
-        System.out.println("--------------path:" + path);
-        return MyFileUtils.createResponseEntity(path);
+        if (StringUtils.isNoneBlank(path)){
+            return MyFileUtils.createResponseEntity(path);
+        }
+        return null;
     }
 
 }

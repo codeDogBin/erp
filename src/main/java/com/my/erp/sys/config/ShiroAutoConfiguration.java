@@ -5,7 +5,6 @@ import com.my.erp.sys.realm.UserRealm;
 import lombok.Data;
 import org.apache.shiro.authc.credential.CredentialsMatcher;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
-import org.apache.shiro.mgt.DefaultSecurityManager;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
@@ -20,7 +19,6 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import org.springframework.web.filter.DelegatingFilterProxy;
 
 import java.util.LinkedHashMap;
@@ -38,10 +36,12 @@ public class ShiroAutoConfiguration {
     private static final String SHIRO_FILTER = "shiroFilter";//变量
     private String hashAlgorithmName = "md5";//加密方式
     private int hashIteration = 2;//散列次数
-    private String loginUrl = "/index.html";//默认登录页
-    private String[] annoUrls;//放行路径
-    private String loginUrls;//登出路径
-    private String[] authcUrls;//拦截路径
+    private String loginUrl = "/4xx.html";//默认登录页
+    private String logoutUrl = "/sys/toLogout";//登出路径
+    private String[] annoUrls ;//放行路径
+    // {"/4xx.html","/sys/toLogin","/login/**","/file/**","/img/**","/resources/**"};
+    private String[] authcUrls  ;//拦截路径
+    // {"/**"}
 
     /**
      *声明凭证匹配器
@@ -83,7 +83,6 @@ public class ShiroAutoConfiguration {
         //设置未登录时要跳转的页面
         factoryBean.setLoginUrl(loginUrl);
 
-
         Map<String,String> filterMap = new LinkedHashMap<>();
         //设置放行的路径
         if(annoUrls!=null && annoUrls.length>0){
@@ -91,13 +90,13 @@ public class ShiroAutoConfiguration {
                 filterMap.put(annoUrl,"anon");
             }
         }
-        //设置等出路径
-        if(null!=loginUrl){
-            filterMap.put(loginUrl,"logout");
+        //设置登出路径
+        if(null!=logoutUrl){
+            filterMap.put(logoutUrl,"logout");
         }
 
         //设置拦截路径
-        if(authcUrls!=null&&authcUrls.length>0){
+        if(authcUrls!=null&&authcUrls.length > 0){
             for (String authcUrl : authcUrls) {
                 filterMap.put(authcUrl,"authc");
             }

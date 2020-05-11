@@ -7,6 +7,7 @@ import com.my.erp.sys.cache.CachePool;
 import com.my.erp.sys.common.CacheBean;
 import com.my.erp.sys.common.DataGridView;
 import com.my.erp.sys.common.ResultObj;
+import com.my.erp.sys.config.Log;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -42,6 +43,7 @@ public class CacheController {
     /**
      *删除缓存
      */
+    @Log("删除缓存")
     @RequestMapping("deleteCache")
     public ResultObj deleteCache(String key){
         CachePool.removeCacheByKey(key);
@@ -60,6 +62,7 @@ public class CacheController {
     /**
      * 同步缓存
      */
+    @Log("同步缓存")
     @RequestMapping("syncCache")
     public ResultObj syncCache(){
         CachePool.syncData();

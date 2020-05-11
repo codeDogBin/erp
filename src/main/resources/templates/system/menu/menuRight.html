@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head>
     <meta charset="UTF-8">
     <title>菜单管理--右边列表</title>
@@ -45,13 +46,13 @@
     <table class="layui-hide" id="menuTable" lay-filter="menuTable" >
         <!--头工具条-->
         <div id="menuToolBar" style="display:none">
-            <button type="button" lay-event="add" class="layui-btn layui-btn  layui-btn-sm"><span class="layui-icon layui-icon-add-1">添加菜单</span></button>
+            <button type="button" shiro:hasPermission="menu:create" lay-event="add" class="layui-btn layui-btn  layui-btn-sm"><span class="layui-icon layui-icon-add-1">添加菜单</span></button>
         </div>
 
         <!--行工具条-->
         <div id="menuRowBar" style="display:none">
-            <button type="button" lay-event="update" class="layui-btn layui-btn  layui-btn-xs"><span class="layui-icon layui-icon-edit">更新</span></button>
-            <button type="button" lay-event="delete" class="layui-btn layui-btn-danger  layui-btn-xs"><span class="layui-icon layui-icon-delete">删除</span></button>
+            <button type="button" shiro:hasPermission="menu:update" lay-event="update" class="layui-btn layui-btn  layui-btn-xs"><span class="layui-icon layui-icon-edit">更新</span></button>
+            <button type="button" shiro:hasPermission="menu:delete" lay-event="delete" class="layui-btn layui-btn-danger  layui-btn-xs"><span class="layui-icon layui-icon-delete">删除</span></button>
         </div>
     </table>
 </div>
@@ -77,7 +78,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">菜单地址</label>
             <div class="layui-input-block">
-                <input type="text" name="href"  lay-verify="required"  autocomplete="off" placeholder="请输入菜单地址" class="layui-input">
+                <input type="text" name="href"    autocomplete="off" placeholder="请输入菜单地址" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
@@ -98,15 +99,15 @@
             <div class="layui-inline">
                 <label class="layui-form-label">是否可用</label>
                 <div class="layui-input-inline">
-                    <input type="radio" name="open" value="1" title="可用" checked="">
-                    <input type="radio" name="open" value="0" title="不可用">
+                    <input type="radio" name="available" value="1" title="可用" checked="">
+                    <input type="radio" name="available" value="0" title="不可用">
                 </div>
             </div>
             <div class="layui-inline">
                 <label class="layui-form-label">是否展开</label>
                 <div class="layui-input-inline">
-                    <input type="radio" name="available" value="1" title="展开" checked="">
-                    <input type="radio" name="available" value="0" title="不展开">
+                    <input type="radio" name="open" value="1" title="展开" checked="">
+                    <input type="radio" name="open" value="0" title="不展开">
                 </div>
             </div>
             <div>
@@ -148,22 +149,22 @@
             , height: 'full-220'
             , page: true
             , cols: [ [
-                  {field: 'id', title: 'ID', align: 'center',width:'80'}
-                , {field: 'pid', title: '父级菜单ID', align: 'center',width:'100'}
-                , {field: 'title', title: '菜单名称', align: 'center',width:'200'}
-                , {field: 'href', title: '菜单地址', align: 'center',width:'200'}
-                , {field: 'icon', title: '菜单图标', align: 'center',width:'150',templet:function (d) {
+                  {field: 'id', title: 'ID', align: 'center'}
+                , {field: 'pid', title: '父级菜单ID', align: 'center'}
+                , {field: 'title', title: '菜单名称', align: 'center'}
+                , {field: 'href', title: '菜单地址', align: 'center'}
+                , {field: 'icon', title: '菜单图标', align: 'center',templet:function (d) {
                           return '<font class=layui-icon>'+d.icon+'</font>';
                       }}
-                , {field: 'target', title: 'Target', align: 'center',width:'155',hide:true}
-                , {field: 'open', title: '是否展开', align: 'center',width:'100',templet:function (d) {
+                , {field: 'target', title: 'Target', align: 'center',hide:true}
+                , {field: 'open', title: '是否展开', align: 'center',templet:function (d) {
                         return d.open==1?'<font color="green">展开</font>':'<font color="red">不展开</font>';
                     }}
-                , {field: 'available', title: '是否可用', align: 'center',width:'100',templet:function (d) {
+                , {field: 'available', title: '是否可用', align: 'center',templet:function (d) {
                         return d.available==1?'<font color="green">可用</font>':'<font color="red">不可用</font>';
                     }}
-                , {field: 'ordernum', title: '排序码', align: 'center',width:'100'}
-                , {fixed: 'right', title: '操作', toolbar: '#menuRowBar', align: 'center',width:'200'}//绑定行工具栏
+                , {field: 'ordernum', title: '排序码', align: 'center'}
+                , {fixed: 'right', title: '操作', toolbar: '#menuRowBar', align: 'center'}//绑定行工具栏
             ] ]
               ,done: function(res, curr, count){//回调函数处理删除某一页最后一条数据的bug
                   if (res.data.length==0 && curr!= 1){

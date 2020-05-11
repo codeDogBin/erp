@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.my.erp.bus.controller.ProofreadController;
 import com.my.erp.sys.common.*;
 
 import com.my.erp.sys.domain.Permission;
@@ -15,6 +16,8 @@ import com.my.erp.sys.service.RoleService;
 import com.my.erp.sys.service.UserService;
 import com.my.erp.sys.vo.PermissionVo;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,6 +36,8 @@ import java.util.*;
 @RestController
 @RequestMapping("/menu")
 public class MenuController {
+
+    private final static Logger logger = LoggerFactory.getLogger(MenuController.class);
 
     @Autowired
     private PermissionService permissionService;
@@ -141,6 +146,7 @@ public class MenuController {
             permissionService.save(permissionVo);
             return ResultObj.ADD_SUCCESS;
         } catch (Exception e) {
+            logger.error(e.toString());
             e.printStackTrace();
             return ResultObj.ADD_ERROR;
         }
@@ -158,6 +164,7 @@ public class MenuController {
             permissionService.updateById(permissionVo);
             return ResultObj.UPDATE_SUCCESS;
         } catch (Exception e) {
+            logger.error(e.toString());
             e.printStackTrace();
             return ResultObj.UPDATE_ERROR;
         }
@@ -174,7 +181,6 @@ public class MenuController {
         queryWrapper.orderByDesc("ordernum");
         IPage<Permission> page=new Page<>(1,1);
         List<Permission> list = permissionService.page(page,queryWrapper).getRecords();
-        System.out.println(list);
         if(list.size()>0){
             map.put("value",list.get(0).getOrdernum()+1);
         }else{
@@ -207,6 +213,7 @@ public class MenuController {
             permissionService.removeById(permissionVo.getId());
             return ResultObj.DELETE_SUCCESS;
         } catch (Exception e) {
+            logger.error(e.toString());
             e.printStackTrace();
             return ResultObj.DELETE_ERROR;
         }
@@ -217,7 +224,7 @@ public class MenuController {
 
 
 
-    /***************************菜单管理结束***********************************/
+
 
 
 }

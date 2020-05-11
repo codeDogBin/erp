@@ -155,19 +155,19 @@
             , height: 'full-220'
             , page: true
             , cols: [ [
-                  {field: 'id', title: 'ID', align: 'center',width:'80'}
-                , {field: 'pid', title: '父级部门ID', align: 'center',width:'100'}
-                , {field: 'title', title: '部门名称', align: 'center',width:'100'}
-                , {field: 'address', title: '部门地址', align: 'center',width:'155'}
-                , {field: 'remark', title: '部门备注', align: 'center',width:'155'}
-                , {field: 'open', title: '是否展开', align: 'center',width:'100',templet:function (d) {
+                  {field: 'id', title: 'ID', align: 'center'}
+                , {field: 'pid', title: '父级部门ID', align: 'center'}
+                , {field: 'title', title: '部门名称', align: 'center'}
+                , {field: 'address', title: '部门地址', align: 'center'}
+                , {field: 'remark', title: '部门备注', align: 'center'}
+                , {field: 'open', title: '是否展开', align: 'center',templet:function (d) {
                         return d.open==1?'<font color="green">展开</font>':'<font color="red">不展开</font>';
                     }}
-                , {field: 'available', title: '是否可用', align: 'center',width:'100',templet:function (d) {
+                , {field: 'available', title: '是否可用', align: 'center',templet:function (d) {
                         return d.available==1?'<font color="green">可用</font>':'<font color="red">不可用</font>';
                     }}
-                , {field: 'ordernum', title: '排序码', align: 'center',width:'100'}
-                , {field: 'createtime', title: '创建时间', align: 'center',width:'200'}
+                , {field: 'ordernum', title: '排序码', align: 'center'}
+                , {field: 'createtime', title: '创建时间', align: 'center'}
                 , {fixed: 'right', title: '操作', toolbar: '#deptRowBar', align: 'center',width:'200'}//绑定行工具栏
             ] ],done: function(res, curr, count){//回调函数处理删除某一页最后一条数据的bug
                   if (res.data.length==0 && curr!= 1){

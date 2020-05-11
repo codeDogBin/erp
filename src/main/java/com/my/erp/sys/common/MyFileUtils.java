@@ -1,9 +1,7 @@
 package com.my.erp.sys.common;
 
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.IdUtil;
-import com.baomidou.mybatisplus.core.toolkit.IOUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,6 +18,8 @@ import java.util.Properties;
 public class MyFileUtils {
     //文件上传的值
     public static  String UPLOAD_PATH="D:/upload/"; //默认值
+    public static  String UPLOAD_COMPANY_PATH="D:/upload/company"; //默认值
+    public static  String LOG_PATH="D:/logger"; //默认值
 
     static {
         InputStream is = MyFileUtils.class.getClassLoader().getResourceAsStream("file.properties");
@@ -32,6 +32,14 @@ public class MyFileUtils {
         String path = properties.getProperty("filepath");
         if(null!= path){
             UPLOAD_PATH = path;
+        }
+        String path2 = properties.getProperty("companypath");
+        if(null!= path2){
+            UPLOAD_COMPANY_PATH = path2;
+        }
+        String path3 = properties.getProperty("logpath");
+        if(null!= path3){
+            UPLOAD_COMPANY_PATH = path3;
         }
     }
 
@@ -63,7 +71,6 @@ public class MyFileUtils {
             ResponseEntity entity = new ResponseEntity(bytes,headers, HttpStatus.CREATED);
             return entity;
         }
-
         return  null;
     }
 

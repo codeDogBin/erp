@@ -4,15 +4,21 @@ package com.my.erp.sys.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.my.erp.bus.controller.FolderController;
+import com.my.erp.bus.domain.Provider;
+import com.my.erp.sys.common.Constast;
 import com.my.erp.sys.common.DataGridView;
 import com.my.erp.sys.common.ResultObj;
 import com.my.erp.sys.common.TreeNode;
+import com.my.erp.sys.config.Log;
 import com.my.erp.sys.domain.Dept;
 import com.my.erp.sys.domain.Notice;
 import com.my.erp.sys.domain.Permission;
 import com.my.erp.sys.service.DeptService;
 import com.my.erp.sys.vo.DeptVo;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -31,6 +37,8 @@ import java.util.*;
 @RestController
 @RequestMapping("/dept")
 public class DeptController {
+
+    private final static Logger logger = LoggerFactory.getLogger(DeptController.class);
 
     @Autowired
     private DeptService deptService;
@@ -76,6 +84,7 @@ public class DeptController {
      * @param deptVo
      * @return
      */
+    @Log("新增部门")
     @RequestMapping("/addDept")
     public ResultObj addDept(DeptVo deptVo){
         try {
@@ -83,6 +92,7 @@ public class DeptController {
             deptService.save(deptVo);
             return ResultObj.ADD_SUCCESS;
         } catch (Exception e) {
+            logger.error(e.toString());
             e.printStackTrace();
             return ResultObj.ADD_ERROR;
         }
@@ -94,12 +104,14 @@ public class DeptController {
      * @param deptVo
      * @return
      */
+    @Log("修改部门")
     @RequestMapping("/updateDept")
     public ResultObj updateDept(DeptVo deptVo){
         try {
             deptService.updateById(deptVo);
             return ResultObj.UPDATE_SUCCESS;
         } catch (Exception e) {
+            logger.error(e.toString());
             e.printStackTrace();
             return ResultObj.UPDATE_ERROR;
         }
@@ -142,15 +154,28 @@ public class DeptController {
      * @param deptVo
      * @return
      */
+    @Log("删除部门")
     @RequestMapping("/deleteDept")
     public ResultObj deleteDept(DeptVo deptVo){
         try {
             deptService.removeById(deptVo.getId());
             return ResultObj.DELETE_SUCCESS;
         } catch (Exception e) {
+            logger.error(e.toString());
             e.printStackTrace();
             return ResultObj.DELETE_ERROR;
         }
+    }
+
+    /**
+     * 加载所有可用的部门
+     */
+    @RequestMapping("loadAllDeptForSelect")
+    public DataGridView loadAllDeptForSelect(){
+        QueryWrapper<Dept> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("available", Constast.AVAILABLE_TRUE);
+        List<Dept> list = deptService.list(queryWrapper);
+        return  new DataGridView(list);
     }
 }
 

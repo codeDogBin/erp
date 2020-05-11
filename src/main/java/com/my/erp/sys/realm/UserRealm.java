@@ -8,7 +8,6 @@ import com.my.erp.sys.domain.User;
 import com.my.erp.sys.service.PermissionService;
 import com.my.erp.sys.service.RoleService;
 import com.my.erp.sys.service.UserService;
-import com.sun.corba.se.impl.logging.POASystemException;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -20,9 +19,6 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-import sun.dc.path.PathError;
-
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;

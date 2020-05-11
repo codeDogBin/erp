@@ -1,0 +1,101 @@
+
+#registrationCode {
+    border: none;
+    outline: none;
+    border-bottom: 1px solid black;
+    background-color: #F9F9EC;
+    text-indent: 15px;
+    font-size: 16px;
+    letter-spacing: 2px;
+    width: 150px;
+}
+
+.registrationCode {
+    position: absolute;
+    width: 310px;
+    height: 40px;
+    left: 108px;
+    font-size: 18px;
+}
+
+.username {
+    top: 130px;
+}
+
+.password {
+    top: 210px;
+}
+
+.registrationCode {
+    top: 350px;
+    left: 178px;
+}
+
+div.btnArea {
+    position: absolute;
+    top: 420px;
+    left: 220px;
+    height: 120px;
+    width: 320px;
+}
+
+#tip {
+    position: absolute;
+    /* border: 1px solid red; */
+    top: 328px;
+    text-align: center;
+    font-size: 14px;
+}
+
+#password,
+#username,
+#rePassword {
+    border: none;
+    outline: none;
+    border-bottom: 1px solid black;
+    background-color: #F9F9EC;
+    text-indent: 15px;
+    font-size: 16px;
+    letter-spacing: 2px;
+    width: 150px;
+}
+
+.username,
+.password,
+.rePassword {
+    position: absolute;
+    width: 220px;
+    height: 40px;
+    left: 175px;
+    font-size: 18px;
+    width: 400px;
+}
+
+.title {
+    position: absolute;
+    top: 50px;
+    left: 220px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+div.wrapper {
+    width: 600px;
+    height: 560px;
+}
+
+div.rePassword {
+    width: 400px;
+    /*border: 1px solid red;*/
+    top: 274px;
+}
+
+#rePassword {
+    width: 134px;
+}
+
+.bottom {
+    position: absolute;
+    right: 60px;
+    bottom: 30px;
+}

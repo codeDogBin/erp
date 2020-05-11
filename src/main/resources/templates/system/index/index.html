@@ -20,7 +20,7 @@
 		<!-- 顶部 -->
 		<div class="layui-header header">
 			<div class="layui-main mag0">
-				<a href="#" class="logo">仓库管理</a>
+				<a href="#" class="logo">管理系统</a>
 				<!-- 显示/隐藏菜单 -->
 				<a href="javascript:;" class="seraph hideMenu icon-caidan"></a>
 			    <!-- 顶部右侧菜单 -->
@@ -31,12 +31,14 @@
 					<li class="layui-nav-item lockcms" pc>
 						<a href="javascript:;"><i class="seraph icon-lock"></i><cite>锁屏</cite></a>
 					</li>
+					<li class="layui-nav-item">
+						<a href="javascript:;" id="massage" >新消息<span class="layui-badge">0</span></a>
+					</li>
 					<li class="layui-nav-item" id="userInfo">
 						<a href="javascript:;"><img src="/resources/images/face.jpg" class="layui-nav-img userAvatar" width="35" height="35"><cite class="adminName" th:text="${session.user.name}">管理员</cite></a>
 						<dl class="layui-nav-child">
-							<dd><a href="javascript:;" data-url="/resouces/page/user/userInfo.html"><i class="seraph icon-ziliao" data-icon="icon-ziliao"></i><cite>个人资料</cite></a></dd>
-							<dd><a href="javascript:;" data-url="/resouces/page/user/changePwd.html"><i class="seraph icon-xiugai" data-icon="icon-xiugai"></i><cite>修改密码</cite></a></dd>
-							<dd><a href="page/login/login.html" class="signOut"><i class="seraph icon-tuichu"></i><cite>退出</cite></a></dd>
+							<dd><a href="javascript:;" data-url="/sys/toUpdatePwd"><i class="seraph icon-xiugai" data-icon="icon-xiugai"></i><cite>修改密码</cite></a></dd>
+							<dd><a href="/sys/toLogout" class="signOut"><i class="seraph icon-tuichu"></i><cite>退出</cite></a></dd>
 						</dl>
 					</li>
 				</ul>
@@ -112,7 +114,7 @@
 		"bodyTab" : "bodyTab"
 	})
 	layui.use(['bodyTab','form','element','layer','jquery'],function(){
-		var form = layui.form,
+		    var form = layui.form,
 			element = layui.element;
 			$ = layui.$;
 	    	layer = parent.layer === undefined ? layui.layer : top.layer;
@@ -122,6 +124,25 @@
 				url : "/menu/loadIndexLeftMenuJson" //获取菜单json地址
 			});
 
+        function getMassage() {
+            console.log("执行查询");
+            $.post("/proofread/getMassage", function (data) {
+                console.log(data);
+                if (data == 0) {
+                    $("#massage").html('无新提醒');
+                } else {
+                    $("#massage").html('新提醒<span class="layui-badge">' + data + '</span>');
+                }
+            })
+        }
+        getMassage();
+        $(function(){
+            setInterval(getMassage, 60000);
+        })
+
+        $("#massage").on('click',function () {
+            $("#massage").html('无新提醒');
+        });
 		//通过顶部菜单获取左侧二三级菜单   注：此处只做演示之用，实际开发中通过接口传参的方式获取导航数据
 		function getData(json){
 			$.getJSON(tab.tabConfig.url,function(data){
@@ -234,6 +255,8 @@
 	function addTab(_this){
 		tab.tabAdd(_this);
 	}
+
+
 
 	</script>
 </body>

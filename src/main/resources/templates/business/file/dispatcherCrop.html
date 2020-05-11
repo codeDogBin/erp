@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>recycleBin</title>
+    <link rel="stylesheet" href="/file/css/base.css">
+    <link rel="stylesheet" href="/file/css/pagination.css">
+    <link rel="stylesheet" href="/file/css/recycleBin.css">
+    <link rel="stylesheet" href="/file/css/dispatcherCorp.css">
+    <script src="/file/js/jquery.js"></script>
+    <script src="/file/js/pagination.js"></script>
+</head>
+<body>
+<div class="container banner">
+    <div class="header">
+        <ul class="clearfix">
+            <li>当前目录：<span style="color:red;">公司分配</span></li>
+        </ul>
+    </div>
+    <div class="content clearfix">
+        <div class="left">
+            <div class="searchCustomer">
+                <label for="customerInput">查询用户:</label>
+                <input type="text" id="customerInput" placeholder="请输入用户名"/>
+                <button id="searchCustomer">查询</button>
+            </div>
+
+            <div class="middle">
+                <div class="tip" style="text-align: center;padding: 10px 0 0 0;font-weight: 900;">用户列表</div>
+                <div class="pagiWrap">
+                    <div id="pagination-container"></div>
+                    <div id="data-container"></div>
+                </div>
+            </div>
+
+            <div class="bottom">
+                <div class="tip" style="text-align: center;padding: 22px 0 0 0;font-weight: 900;">用户绑定的公司</div>
+                <div class="pagiWrap">
+                    <div id="pagination-container2"></div>
+                    <div id="data-container2"></div>
+                </div>
+                <div class="btnWrap">
+                    <button id="unbindEvent">解除绑定</button>
+                </div>
+            </div>
+        </div>
+        <div class="right">
+            <div class="searchCorp">
+                <label for="cropInput">查询公司:</label>
+                <input type="text" id="cropInput" placeholder="请输入公司名"/>
+                <button id="searchCorp">查询</button>
+            </div>
+            <div class="tip" style="text-align: center;padding: 22px 0 0 0;font-weight: 900;">未绑定公司</div>
+            <div class="pagiWrap">
+                <div id="pagination-container3"></div>
+                <div id="data-container3"></div>
+            </div>
+            <div class="btnWrap">
+                <button id="bindEvent">添加绑定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/file/js/dispatcherCrop.js"></script>
+</body>
+</html>

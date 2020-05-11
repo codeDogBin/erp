@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head>
     <meta charset="UTF-8">
     <title>客户管理</title>
@@ -51,17 +52,17 @@
 
 <!--数据表格开始-->
 <div>
-    <table class="layui-hide" id="customerTable" lay-filter="customerTable" >
+    <table class="layui-hide" shiro:hasPermission="customer:view" id="customerTable" lay-filter="customerTable" >
         <!--头工具条-->
         <div id="customerToolBar" style="display:none">
-            <button type="button" lay-event="add" class="layui-btn layui-btn  layui-btn-sm"><span class="layui-icon layui-icon-add-1">添加客户</span></button>
-            <button type="button" lay-event="batchDelete" class="layui-btn layui-btn-danger  layui-btn-sm"><span class="layui-icon layui-icon-delete">批量删除</span></button>
+            <button type="button" shiro:hasPermission="customer:create" lay-event="add" class="layui-btn layui-btn  layui-btn-sm"><span class="layui-icon layui-icon-add-1">添加客户</span></button>
+            <button type="button" shiro:hasPermission="customer:delete" lay-event="batchDelete" class="layui-btn layui-btn-danger  layui-btn-sm"><span class="layui-icon layui-icon-delete">批量删除</span></button>
         </div>
 
         <!--行工具条-->
         <div id="customerRowBar" style="display:none">
-            <button type="button" lay-event="update" class="layui-btn layui-btn  layui-btn-xs"><span class="layui-icon layui-icon-edit">更新</span></button>
-            <button type="button" lay-event="delete" class="layui-btn layui-btn-danger  layui-btn-xs"><span class="layui-icon layui-icon-delete">删除</span></button>
+            <button type="button" shiro:hasPermission="customer:update" lay-event="update" class="layui-btn layui-btn  layui-btn-xs"><span class="layui-icon layui-icon-edit">更新</span></button>
+            <button type="button" shiro:hasPermission="customer:delete" lay-event="delete" class="layui-btn layui-btn-danger  layui-btn-xs"><span class="layui-icon layui-icon-delete">删除</span></button>
         </div>
     </table>
 </div>

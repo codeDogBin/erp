@@ -14,4 +14,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface UserService extends IService<User> {
 
     void saveUserRole(Integer uid, Integer[] ids);
+
+    Integer getRoleIDByUserID(Integer id);
 }

@@ -37,10 +37,21 @@ public interface Constast {
     String IMG_DEFAUL = "img/default.jpg";
 
     //对应的审核状态
-    String AUDITING_NOALL = "待审核";
-    String AUDITING_NOYEWU = "待审业务";
-    String AUDITING_NOCAIWU = "待审财务";
-    String AUDITING_YEWU_ERROR = "业务未通过";
-    String AUDITING_CAIWU_ERROR = "财务未通过";
-    String AUDITING_PASS = "已审核";
+    /**
+     * YE 业务  CA财务
+     * NO 未审核
+     * PA 通过
+     * RE 驳回
+     */
+    Integer AUDITING_YENO_CANO = 1;
+    Integer AUDITING_YEPA_CANO = 2;
+    Integer AUDITING_YENO_CAPA = 3;
+    Integer AUDITING_YEPA_CAPA = 4;
+    Integer AUDITING_YERE_CANO = 5;
+    Integer AUDITING_YERE_CAPA = 6;
+    Integer AUDITING_YENO_CARE = 7;
+    Integer AUDITING_YEPA_CARE = 8;
+    Integer AUDITING_YERE_CARE = 9;
+
+
 }

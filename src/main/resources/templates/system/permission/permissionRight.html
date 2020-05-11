@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head>
     <meta charset="UTF-8">
     <title>权限管理--右边列表</title>
@@ -31,7 +32,7 @@
                 </div>
                 <label class="layui-form-label">权限编码</label>
                 <div class="layui-input-inline">
-                    <input type="text" name="title"  id="percode"  autocomplete="off" class="layui-input">
+                    <input type="text" name="percode"  id="percode"  autocomplete="off" class="layui-input">
                 </div>
                 <div class="layui-input-inline" style="text-align: center">
                     <button type="button" class="layui-btn" lay-submit="" lay-filter="doSearch"><span class="layui-icon layui-icon-search">查询</span></button>
@@ -46,16 +47,16 @@
 
 <!--数据表格开始-->
 <div>
-    <table class="layui-hide" id="permissionTable" lay-filter="permissionTable" >
+    <table class="layui-hide" shiro:hasPermission="permission:view" id="permissionTable" lay-filter="permissionTable" >
         <!--头工具条-->
         <div id="permissionToolBar" style="display:none">
-            <button type="button" lay-event="add" class="layui-btn layui-btn  layui-btn-sm"><span class="layui-icon layui-icon-add-1">添加权限</span></button>
+            <button type="button" shiro:hasPermission="permission:create" lay-event="add" class="layui-btn layui-btn  layui-btn-sm"><span class="layui-icon layui-icon-add-1">添加权限</span></button>
         </div>
 
         <!--行工具条-->
         <div id="permissionRowBar" style="display:none">
-            <button type="button" lay-event="update" class="layui-btn layui-btn  layui-btn-xs"><span class="layui-icon layui-icon-edit">更新</span></button>
-            <button type="button" lay-event="delete" class="layui-btn layui-btn-danger  layui-btn-xs"><span class="layui-icon layui-icon-delete">删除</span></button>
+            <button type="button" shiro:hasPermission="permission:update" lay-event="update" class="layui-btn layui-btn  layui-btn-xs"><span class="layui-icon layui-icon-edit">更新</span></button>
+            <button type="button" shiro:hasPermission="permission:delete" lay-event="delete" class="layui-btn layui-btn-danger  layui-btn-xs"><span class="layui-icon layui-icon-delete">删除</span></button>
         </div>
     </table>
 </div>
@@ -88,15 +89,15 @@
             <div class="layui-inline">
                 <label class="layui-form-label">是否可用</label>
                 <div class="layui-input-inline">
-                    <input type="radio" name="open" value="1" title="可用" checked="">
-                    <input type="radio" name="open" value="0" title="不可用">
+                    <input type="radio" name="available" value="1" title="可用" checked="">
+                    <input type="radio" name="available" value="0" title="不可用">
                 </div>
             </div>
             <div class="layui-inline">
                 <label class="layui-form-label">是否展开</label>
                 <div class="layui-input-inline">
-                    <input type="radio" name="available" value="1" title="展开" >
-                    <input type="radio" name="available" value="0" title="不展开" checked="">
+                    <input type="radio" name="open" value="1" title="展开" >
+                    <input type="radio" name="open" value="0" title="不展开" checked="">
                 </div>
             </div>
             <div>

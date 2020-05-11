@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <title>MainPage</title>
+    <link rel="stylesheet" href="/file/css/pagination.css">
+    <link rel="stylesheet" href="/file/css/base.css">
+    <link rel="stylesheet" href="/file/css/folder.css">
+    <link rel="stylesheet" href="/resources/layui/css/layui.css" media="all" />
+    <script src="/file/js/jquery.js"></script>
+    <script src="/file/js/pagination.js"></script>
+    <script src="/file/js/folder.js"></script>
+</head>
+<body>
+<div class="wrapper banner">
+    <div class="pathZone">
+        <div class="welcome"><h3><span class="red" id="name"></span>，您已进入文件编辑区</h3> </div>
+        <div class="path">
+            <div class="currentPath" id="way">当前路径：
+            </div>
+            <span id="msg" style="color: red"></span>
+            <div class="createFile">
+                <div class="createFileWrap" >
+                    <div shiro:hasPermission="folder:create">
+                    <input type="text" id="filenameInput" placeholder="请输入文件夹名" />
+                    <input class="btn" type="button" id="createNewFile" value="创建文件夹" onclick="createFolder()" />
+                    <form id="from" enctype="multipart/form-data" class="formClass">
+                        <input type="file" name="file" id="selectFile"  multiple="multiple"  value="上传文件" style="display: none"/>
+                        <input class="btn" type="button" id="uploadFile" onclick="uploadFil()" value="确认上传" style="display: none">
+                    </form>
+                    </div>
+                    <a href="/bus/toFileMain" style="color:purple;text-decoration: underline;">返回首页</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="folderZone">
+        <div class="folderTip">文件列表</div>
+        <ul class="clearfix" id="folderSpace">
+        </ul>
+    </div>
+
+</div>
+<script type="text/javascript" src="/resources/layui/layui.js"></script>
+</body>
+</html>

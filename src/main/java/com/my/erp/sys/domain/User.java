@@ -74,4 +74,6 @@ public class User implements Serializable {
      */
     @TableField(exist = false)
     private String deptname;
+
+    private Integer customerid;
 }

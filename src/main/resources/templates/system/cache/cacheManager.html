@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head>
     <meta charset="UTF-8">
     <title>缓存管理</title>
@@ -24,16 +25,16 @@
 
 <!--数据表格开始-->
 <div>
-    <table class="layui-hide" id="cacheTable" lay-filter="cacheTable" >
+    <table class="layui-hide" shiro:hasPermission="cache:view" id="cacheTable" lay-filter="cacheTable" >
         <!--头工具条-->
         <div id="cacheToolBar" style="display:none">
-            <button type="button" lay-event="removeAll" class="layui-btn layui-btn  layui-btn-sm"><span class="layui-icon layui-icon-delete">清空缓存</span></button>
-            <button type="button" lay-event="syncCache" class="layui-btn layui-btn-danger  layui-btn-sm"><span class="layui-icon layui-icon-about">同步缓存</span></button>
+            <button type="button" shiro:hasPermission="cache:removeall" shiro lay-event="removeAll" class="layui-btn layui-btn  layui-btn-sm"><span class="layui-icon layui-icon-delete">清空缓存</span></button>
+            <button type="button" shiro:hasPermission="cache:sync "lay-event="syncCache" class="layui-btn layui-btn-danger  layui-btn-sm"><span class="layui-icon layui-icon-about">同步缓存</span></button>
         </div>
 
         <!--行工具条-->
         <div id="cacheRowBar" style="display:none">
-            <button type="button" lay-event="delete" class="layui-btn layui-btn-danger  layui-btn-xs"><span class="layui-icon layui-icon-delete">删除</span></button>
+            <button  shiro:hasPermission="cache:delete" type="button" lay-event="delete" class="layui-btn layui-btn-danger  layui-btn-xs"><span class="layui-icon layui-icon-delete">删除</span></button>
         </div>
     </table>
 </div>

@@ -11,7 +11,7 @@ spring:
       max-active: 20
       max-wait: 5000
       initial-size: 1
-      filters: stat,log4j,wall
+      filters: stat,wall
       validationQuery: SELECT 'x'   #验证连接
       enable: true
    #监控配置
@@ -22,6 +22,9 @@ spring:
         allow: 
         deny: 
         url-pattern: /druid/*
+   #开启aop
+  aop:
+    auto: true
   #thymeleaf的配置 
   thymeleaf: 
     cache: false
@@ -33,10 +36,14 @@ spring:
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
+
+      #控制上传的文件大小 单个文件最大50MB 多个文件最大100MB
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 100MB
 #配置mybatisplus
 mybatis-plus:
-  mapper-locations:
-  - classpath:mapper/*/*Mapper.xml
   global-config:
     db-config:
       id-type: auto
@@ -49,11 +56,16 @@ shiro:
   hash-algorithm-name: md5
   hash-iterations: 2
   anon-urls:
-  - /index.html*
+  - /4xx.html*
   - /sys/toLogin*
   - /login/login*
   - /resources/**
-  login-url: /index.html
+  - /file/**
+  - /img/**
+  login-url: /4xx.html
   log-out-url: /login/logout*
   authc-ulrs:
   - /**
+#日志设置
+logging:
+  config: classpath:logback-spring.xml

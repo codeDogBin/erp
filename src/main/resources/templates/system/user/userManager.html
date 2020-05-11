@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head>
     <meta charset="UTF-8">
     <title>用户管理</title>
@@ -57,18 +58,18 @@
 
 <!--数据表格开始-->
 <div>
-    <table class="layui-hide" id="userTable" lay-filter="userTable" >
+    <table class="layui-hide"   shiro:hasPermission="user:view" id="userTable" lay-filter="userTable" >
         <!--头工具条-->
         <div id="userToolBar" style="display:none">
-            <button type="button" lay-event="add" class="layui-btn layui-btn  layui-btn-sm"><span class="layui-icon layui-icon-add-1">添加用户</span></button>
+            <button type="button" shiro:hasPermission="user:create" lay-event="add" class="layui-btn layui-btn  layui-btn-sm"><span class="layui-icon layui-icon-add-1">添加用户</span></button>
         </div>
 
         <!--行工具条-->
         <div id="userRowBar" style="display:none">
-            <button type="button" lay-event="update" class="layui-btn layui-btn  layui-btn-xs"><span class="layui-icon layui-icon-edit">更新</span></button>
-            <button type="button" lay-event="resetPwd" class="layui-btn layui-btn  layui-btn-xs"><span class="layui-icon layui-icon-delete">重置密码</span></button>
-            <button type="button" lay-event="selectRole" class="layui-btn layui-btn  layui-btn-xs"><span class="layui-icon layui-icon-delete">分配权限</span></button>
-            <button type="button" lay-event="delete" class="layui-btn layui-btn-danger  layui-btn-xs"><span class="layui-icon layui-icon-delete">删除</span></button>
+            <button type="button" lay-event="update" shiro:hasPermission="user:upadate"  class="layui-btn layui-btn  layui-btn-xs"><span class="layui-icon layui-icon-edit">更新</span></button>
+            <button type="button" lay-event="resetPwd" shiro:hasPermission="user:resetPwd"  class="layui-btn layui-btn  layui-btn-xs"><span class="layui-icon layui-icon-delete">重置密码</span></button>
+            <button type="button" lay-event="selectRole" shiro:hasPermission="user:selectRole"  class="layui-btn layui-btn  layui-btn-xs"><span class="layui-icon layui-icon-delete">分配角色</span></button>
+            <button type="button" lay-event="delete" shiro:hasPermission="user:delete"  class="layui-btn layui-btn-danger  layui-btn-xs"><span class="layui-icon layui-icon-delete">删除</span></button>
         </div>
     </table>
 </div>
@@ -115,8 +116,8 @@
             <div>
                 <label class="layui-form-label">登录名称</label>
                 <div class="layui-input-inline">
-                    <input type="text" name="loginname" id="loginname" lay-verify="required" autocomplete="off" placeholder="请输入登录名称"
-                           class="layui-input">
+                    <input type="text" name="loginname" id="loginname"  lay-verify="required" autocomplete="off" placeholder="请输入登录名称"
+                           class="layui-input"><span style="color: red;display: none" id="loginmsg" >请修改登录名</span>
                 </div>
             </div>
         </div>
@@ -134,7 +135,7 @@
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">是否展开</label>
+            <label class="layui-form-label">用户性别</label>
             <div class="layui-input-inline">
                 <input type="radio" name="sex" value="1" title="男" checked="">
                 <input type="radio" name="sex" value="0" title="女">
@@ -144,6 +145,21 @@
                 <div class="layui-input-inline">
                     <input type="radio" name="available" value="1" title="可用" checked="">
                     <input type="radio" name="available" value="0" title="不可用">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" >是否为客户</label>
+            <div class="layui-input-inline" id="iscustomer" >
+                <input type="radio" lay-filter="iscustomer" name="iscustomer" value="1" title="是" checked="">
+                <input type="radio" lay-filter="iscustomer" name="iscustomer" value="0" title="否">
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">客户</label>
+                <div class="layui-input-inline">
+                    <select name="customerid" id="search_customerid"  lay-search="">
+                        <option value="">请选择客户</option>
+                    </select>
                 </div>
             </div>
         </div>
@@ -189,21 +205,21 @@
             , height: 'full-220'
             , page: true
             , cols: [ [
-                {field: 'id', title: 'ID', align: 'center',width:'50'}
-                , {field: 'name', title: '用户姓名', align: 'center',width:'90'}
-                , {field: 'loginname', title: '登录名称', align: 'center',width:'90'}
-                , {field: 'sex', title: '性别', align: 'center',width:'60',templet:function (d) {
+                {field: 'id', title: 'ID', align: 'center',width:'60'}
+                , {field: 'name', title: '用户姓名', align: 'center',width:'100'}
+                , {field: 'loginname', title: '登录名称', align: 'center',width:'100'}
+                , {field: 'sex', title: '性别', align: 'center',width:'80',templet:function (d) {
                         return d.sex==1?'<font color="green">男</font>':'<font color="red">女</font>';
                     }}
-                , {field: 'deptname', title: '部门名称', align: 'center',width:'90'}
-                , {field: 'address', title: '部门地址', align: 'center',width:'90'}
-                , {field: 'leadername', title: '直属领导', align: 'center',width:'90'}
-                , {field: 'remark', title: '用户备注', align: 'center',width:'90'}
-                , {field: 'hiredate', title: '入职时间', align: 'center',width:'90'}
-                , {field: 'available', title: '是否可用', align: 'center',width:'90',templet:function (d) {
+                , {field: 'deptname', title: '部门名称', align: 'center',width:'120'}
+                , {field: 'address', title: '部门地址', align: 'center',width:'120'}
+                , {field: 'leadername', title: '直属领导', align: 'center',width:'120'}
+                , {field: 'remark', title: '用户备注', align: 'center',width:'120'}
+                , {field: 'hiredate', title: '入职时间', align: 'center',width:'120'}
+                , {field: 'available', title: '是否可用', align: 'center',width:'100',templet:function (d) {
                         return d.available==1?'<font color="green">可用</font>':'<font color="red">不可用</font>';
                     }}
-                , {field: 'ordernum', title: '排序码', align: 'center',width:'80'}
+                , {field: 'ordernum', title: '排序码', align: 'center',width:'100'}
                 , {field: 'imgpath', title: '用户头像', align: 'center',width:'200'}
                 , {fixed: 'right', title: '操作', toolbar: '#userRowBar', align: 'center',width:'400'}//绑定行工具栏
             ] ], done: function(res, curr, count){//回调函数处理删除某一页最后一条数据的bug
@@ -213,6 +229,27 @@
                     })
                 }
             }
+        });
+        //监听是否为客户
+        form.on('radio(iscustomer)', function(data){
+            var val = data.value;
+            if(val == 1){
+                $("#search_customerid").removeAttr('disabled','disabled');
+            }else{
+                $("#search_customerid").attr('disabled','disabled');
+            }
+            form.render('select');
+        });
+
+        //加载查询的客户列表
+        $.get("/customer/loadAllCustomerForSelect", function (res) {
+            var select = $('#search_customerid');
+            var html = ' <option value="">请选择客户</option>';
+            $.each(res.data, function (index, item) {
+                html += '<option value=' + item.id + '>' + item.customername + '</option>'
+            });
+            select.html(html);
+            form.render("select");
         });
 
 
@@ -268,6 +305,9 @@
                 success:function () {
                     $('#dataFrm')[0].reset();
                     $("#deptid").val("");
+                    $("#loginname").css("border-color","#e6e6e6");
+                    $("#search_customerid").removeAttr('disabled','disabled');
+                    $("#iscustomer input").removeAttr('disabled','disabled');
                     url="/user/addUser";
                     //初始化排序码
                     $.post("/user/loadUserMaxOrderNum",function (res) {
@@ -292,6 +332,7 @@
                     //将表单数据重置
                     $('#dataFrm')[0].reset();
                     $("#deptid").val("");
+                    $("#loginname").css("border-color","#e6e6e6");
                     //装载新数据
                     form.val("dataFrm",data);
                     //选中之前所属部门 nodeID=data.deptid
@@ -299,6 +340,8 @@
                     dtree.dataInit("deptTree", data.deptid);
                     //设置所属部门树id
                     dtree.selectVal("deptTree");
+                    $("#iscustomer input").attr("disabled","disabled");
+                    $("#search_customerid").attr('disabled','disabled');
                     //选中领导部门
                     var leaderid = data.mgr;
                     if (leaderid!=null) {
@@ -328,21 +371,7 @@
             return false;
         })
 
-        //添加和修改提交
-        // $("#doSubmit").click(function () {
-        //     //同步富文本和文本域的内容
-        //     var data = $("#dataFrm").serialize();
-        //     $.post(url,data,function (res) {
-        //         if (res.code==200){
-        //             //添加或者修改成功刷新
-        //             tableIns.reload();
-        //             selectTree.reload();
-        //             window.parent.left.userTree.reload();
-        //         }
-        //         layer.msg(res.msg)
-        //         layer.close(mainIndex);
-        //     });
-        // })
+
 
 
         //初始化查询条件下拉树
@@ -420,8 +449,28 @@
         //监听用户名失去焦点事件 生成拼音
         $("#username").on("blur",function(){
             var username=this.value;
+            if(username == ''){
+                return;
+            }
             $.get("/user/changeChineseToPinyin",{username:username},function (res) {
                 $("#loginname").val(res);
+                $("#loginname").css("border-color","#e6e6e6");
+            })
+        })
+
+        //验证登录名是否可用
+        $('#loginname').on("blur",function () {
+            var loginname = this.value;
+            if(loginname ==""){
+                return
+            }
+            $.post("/user/checkLoginname",{loginname:loginname},function (res) {
+                if(res.code!= 200){
+                    $("#loginname").css("border-color","red");
+                }else {
+                    $("#loginname").css("border-color","#e6e6e6");
+                }
+                layer.msg(res.msg);
             })
         })
 

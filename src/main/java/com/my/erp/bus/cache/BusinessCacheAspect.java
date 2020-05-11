@@ -3,6 +3,7 @@ package com.my.erp.bus.cache;
 
 import com.my.erp.bus.domain.Customer;
 import com.my.erp.bus.domain.Goods;
+import com.my.erp.bus.domain.Proofread;
 import com.my.erp.bus.domain.Provider;
 import com.my.erp.sys.cache.CachePool;
 import org.apache.commons.logging.Log;
@@ -344,6 +345,98 @@ public class BusinessCacheAspect {
             //删除缓存
             CACHE_CONTAINER.remove(CACHE_GOODS_PROFIX+id);
             log.info("已从缓存中删除商品对象"+CACHE_GOODS_PROFIX+id);
+        }
+        return isSuccess;
+    }
+
+
+    //声明切面表达式
+    private static final String POINTCUT_PROOFREAD_UPDATE="execution (* com.my.erp.bus.service.impl.ProofreadServiceImpl.updateById(..))";
+    private static final String POINTCUT_PROOFREAD_GET="execution (* com.my.erp.bus.service.impl.ProofreadServiceImpl.getById(..))";
+    private static final String POINTCUT_PROOFREAD_REMOVE="execution (* com.my.erp.bus.service.impl.ProofreadServiceImpl.removeById(..))";
+    private static final String POINTCUT_PROOFREAD_ADD="execution (* com.my.erp.bus.service.impl.ProofreadServiceImpl.save(..))";
+
+    private static final String CACHE_PROOFREAD_PROFIX="proofread:";
+
+    /**
+     * 业务查询切入
+     */
+    @Around(value=POINTCUT_PROOFREAD_GET)
+    public Object cacheProofreadGet(ProceedingJoinPoint joinPoint) throws Throwable {
+        //取出第一个参数
+        Integer id =(Integer) joinPoint.getArgs()[0];
+        //查询缓存中是否有数据
+        Proofread result =(Proofread) CACHE_CONTAINER.get(CACHE_PROOFREAD_PROFIX+id);
+        log.info("已从缓存中找到业务对象"+CACHE_PROOFREAD_PROFIX+id);
+        if(result!=null){
+            return result;
+        }else{
+            //将数据存入缓存 并且返回
+            log.info("未从缓存中找到业务对象,去数据库查询并放入缓存");
+            Proofread res2 = (Proofread) joinPoint.proceed();
+            CACHE_CONTAINER.put(CACHE_PROOFREAD_PROFIX+res2.getId(), res2);
+            return res2;
+        }
+    }
+
+    /**
+     * 业务更新的切入
+     * @param joinPoint
+     * @return
+     * @throws Throwable
+     */
+    @Around(value=POINTCUT_PROOFREAD_UPDATE)
+    public Object cacheProofreadUpdate(ProceedingJoinPoint joinPoint) throws Throwable {
+        //取出第一个参数
+        Proofread proofread = (Proofread) joinPoint.getArgs()[0];
+        Boolean isSuccess = (Boolean) joinPoint.proceed();
+        if (isSuccess) {
+            Proofread newproofread = (Proofread) CACHE_CONTAINER.get(proofread.getId());
+            if (null == newproofread) {
+                newproofread = new Proofread();
+                BeanUtils.copyProperties(proofread, newproofread);
+                log.info("业务对象缓存已更新"+CACHE_PROOFREAD_PROFIX + newproofread.getId());
+                CACHE_CONTAINER.put(CACHE_PROOFREAD_PROFIX + newproofread.getId(), newproofread);
+            }
+        }
+        return isSuccess;
+    }
+
+    /**
+     * 业务添加的切入
+     * @param joinPoint
+     * @return
+     * @throws Throwable
+     */
+    @Around(value=POINTCUT_PROOFREAD_ADD)
+    public Object cacheProofreadAdd(ProceedingJoinPoint joinPoint) throws Throwable {
+        //取出第一个参数
+        Proofread proofread = (Proofread) joinPoint.getArgs()[0];
+        //执行目标方法
+        Boolean isSuccess = (Boolean) joinPoint.proceed();
+        if (isSuccess) {
+            CACHE_CONTAINER.put(CACHE_PROOFREAD_PROFIX + proofread.getId(), proofread);
+            log.info("业务对象缓存已增加"+CACHE_PROOFREAD_PROFIX + proofread.getId());
+        }
+        return isSuccess;
+    }
+
+
+    /**
+     * 业务删除的切入
+     * @param joinPoint
+     * @return
+     * @throws Throwable
+     */
+    @Around(value=POINTCUT_PROOFREAD_REMOVE)
+    public Object cacheProofreadDelete(ProceedingJoinPoint joinPoint) throws Throwable {
+        //取出第一个参数
+        Integer id = (Integer) joinPoint.getArgs()[0];
+        Boolean isSuccess = (Boolean) joinPoint.proceed();
+        if (isSuccess) {
+            //删除缓存
+            CACHE_CONTAINER.remove(CACHE_PROOFREAD_PROFIX+id);
+            log.info("已从缓存中删除业务对象"+CACHE_PROOFREAD_PROFIX+id);
         }
         return isSuccess;
     }

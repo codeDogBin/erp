@@ -19,6 +19,8 @@ import java.util.Collection;
  */
 @Service
 public class CustomerServiceImpl extends ServiceImpl<CustomerMapper, Customer> implements CustomerService {
+
+
     @Override
     public boolean save(Customer entity) {
         return super.save(entity);
@@ -26,6 +28,7 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerMapper, Customer> i
 
     @Override
     public boolean removeById(Serializable id) {
+
         return super.removeById(id);
     }
 
@@ -42,5 +45,10 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerMapper, Customer> i
     @Override
     public boolean removeByIds(Collection<? extends Serializable> idList) {
         return super.removeByIds(idList);
+    }
+
+    @Override
+    public Integer getccByCusId(Integer id) {
+        return getBaseMapper().getccByCusId(id);
     }
 }

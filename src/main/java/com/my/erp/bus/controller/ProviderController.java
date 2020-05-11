@@ -11,8 +11,11 @@ import com.my.erp.bus.vo.ProviderVo;
 import com.my.erp.sys.common.Constast;
 import com.my.erp.sys.common.DataGridView;
 import com.my.erp.sys.common.ResultObj;
+import com.my.erp.sys.config.Log;
 import com.my.erp.sys.domain.User;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -23,7 +26,7 @@ import java.util.List;
 
 /**
  * <p>
- *  前端控制器
+ *  供应商前端控制器
  * </p>
  *
  * @author bin
@@ -32,6 +35,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/provider")
 public class ProviderController {
+
+    private final static Logger logger = LoggerFactory.getLogger(ProviderController.class);
 
     @Autowired
     private ProviderService providerService;
@@ -63,13 +68,14 @@ public class ProviderController {
      * @param session
      * @return
      */
-
+    @Log("添加供应商")
     @RequestMapping("/addProvider")
     public ResultObj addProvider(ProviderVo providerVo, HttpSession session){
         try {
             providerService.save(providerVo);
             return ResultObj.ADD_SUCCESS;
         } catch (Exception e) {
+            logger.error(e.toString());
             e.printStackTrace();
             return ResultObj.ADD_ERROR;
         }
@@ -81,6 +87,7 @@ public class ProviderController {
      * @param session
      * @return
      */
+    @Log("修改供应商")
     @RequestMapping("/updateProvider")
     public ResultObj updateProvider(ProviderVo providerVo, HttpSession session){
         try {
@@ -97,6 +104,7 @@ public class ProviderController {
      * @param providerVo
      * @return
      */
+    @Log("批量供应商")
     @RequestMapping("/batchDeleteProvider")
     public ResultObj batchDeleteProvider(ProviderVo providerVo){
         try {
@@ -104,6 +112,7 @@ public class ProviderController {
             providerService.removeByIds(ids);
             return ResultObj.DELETE_SUCCESS;
         } catch (Exception e) {
+            logger.error(e.toString());
             e.printStackTrace();
             return  ResultObj.DELETE_ERROR;
         }
@@ -114,12 +123,14 @@ public class ProviderController {
      * @param id
      * @return
      */
+    @Log("删除供应商")
     @RequestMapping("/deleteProvider")
     public ResultObj batchDeleteProvider(Integer id){
         try {
             providerService.removeById(id);
             return ResultObj.DELETE_SUCCESS;
         } catch (Exception e) {
+            logger.error(e.toString());
             e.printStackTrace();
             return  ResultObj.DELETE_ERROR;
         }

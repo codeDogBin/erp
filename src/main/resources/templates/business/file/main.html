@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <title>MainPage</title>
+    <link rel="stylesheet" href="/file/css/pagination.css">
+    <link rel="stylesheet" href="/file/css/base.css">
+    <link rel="stylesheet" href="/file/css/mainPage.css">
+    <script src="/file/js/jquery.js"></script>
+    <script src="/file/js/pagination.js"></script>
+</head>
+
+<body>
+
+    <div class="wrapper">
+        <div class="loginWrapper">
+            <div class="content">
+                <div class="title">欢迎<span th:text="${session.user.name}" class="username" style="color: red;"></span>登录系统</div>
+                <div id="data-container"></div>
+                <div id="pagination-container"></div>
+            </div>
+        </div>
+        <div class="ifStaff" shiro:hasPermission="company:create" >
+            <input type="text"  id="searchInput" placeholder="请输入公司名">
+            <button id="searchBtn" class="btn2">搜索</button>
+            <input type="text" id="createCorp" placeholder="请创建公司名">
+            <button id="createBtn" class="btn2">新建</button>
+            <a href="downZip.do" shiro:hasPermission="company:backup" class="ifAdmin">下载备份</a>
+        </div>
+
+    </div>
+
+    <script src="/file/js/mainPage.js"></script>
+
+</body>
+
+</html>

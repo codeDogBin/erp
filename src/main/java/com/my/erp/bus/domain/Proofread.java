@@ -37,13 +37,21 @@ public class Proofread implements Serializable {
     /**
      * 业务名称
      */
-    private String name;
+    private String proofreadname;
 
     private String content;
 
+    private String auditcontent;
+
+    @TableField(exist = false)
+    private String[] auditcontents;
+
+    @TableField(exist = false)
+    private String[] contents;
+
     private Integer price;
 
-    private Date creattime;
+    private Date createtime;
 
     private String operateperson;
 
@@ -54,7 +62,7 @@ public class Proofread implements Serializable {
     @TableField(exist = false)
     private String Customername;
 
-    private String customrimg;
+    private String customerimg;
 
     private String operateimg;
 
@@ -62,11 +70,15 @@ public class Proofread implements Serializable {
 
     private Integer deptid;
 
+    @TableField(exist = false)
+    private String depttitle;
 
     /**
-     * 审核
+     * 审核id
      */
-    private String auditing;
+    private Integer auditingid;
 
+    @TableField(exist = false)
+    private String auditingname;
 
 }

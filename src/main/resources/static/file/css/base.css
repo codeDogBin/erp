@@ -1,0 +1,71 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+/* 浮动样式 */
+.fl {
+    float: left;
+}
+
+.fr {
+    float: right;
+}
+
+/* 清除浮动样式 */
+.clearfix:after,
+.clearfix:before {
+    content: '';
+    display: table;
+}
+
+.clearfix:after {
+    clear: both;
+}
+
+.clearfix {
+    *zoom: 1;
+}
+
+ul {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+    color: #424242;
+}
+
+div.paginationjs .paginationjs-pages li.active>a {
+    height: 30px;
+    line-height: 30px;
+    background: rgb(48, 165, 238);
+    color: #fff;
+}
+
+.btn {
+    width: 80px;
+    height: 30px;
+    border-radius: 4px;
+    background-color: white;
+    font-weight: 900;
+    border: 1px solid #6c757d;
+    color: #6c757d;
+}
+
+.btn:hover,
+.btn2:hover {
+    color: #fff;
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+
+.btn2 {
+    width: 60px;
+    height: 25px;
+    border-radius: 4px;
+    background-color: white;
+    font-weight: 900;
+    border: 1px solid #6c757d;
+    color: #6c757d;
+}

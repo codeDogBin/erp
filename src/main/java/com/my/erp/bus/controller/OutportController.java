@@ -15,8 +15,11 @@ import com.my.erp.bus.vo.InportVo;
 import com.my.erp.bus.vo.OutportVo;
 import com.my.erp.sys.common.DataGridView;
 import com.my.erp.sys.common.ResultObj;
+import com.my.erp.sys.config.Log;
 import com.my.erp.sys.domain.User;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -38,6 +41,8 @@ import java.util.List;
 @RequestMapping("/outport")
 public class OutportController {
 
+    private final  static Logger logger = LoggerFactory.getLogger(OutportController.class);
+
     @Autowired
     private OutportService outportService;
 
@@ -50,6 +55,7 @@ public class OutportController {
     /**
      * 添加退货信息
      */
+    @Log("添加退货信息")
     @RequestMapping("addOutport")
     public ResultObj addOutPort(Integer id, Integer number, String remark, HttpSession session){
         try {
@@ -57,6 +63,7 @@ public class OutportController {
             outportService.addOutPort(id,number,remark,name);
             return ResultObj.OPERATE_SUCCESS;
         } catch (Exception e) {
+            logger.error(e.toString());
             e.printStackTrace();
             return  ResultObj.OPERATE_ERROR;
         }

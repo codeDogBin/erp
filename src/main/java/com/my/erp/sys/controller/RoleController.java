@@ -10,6 +10,7 @@ import com.my.erp.sys.common.Constast;
 import com.my.erp.sys.common.DataGridView;
 import com.my.erp.sys.common.ResultObj;
 import com.my.erp.sys.common.TreeNode;
+import com.my.erp.sys.config.Log;
 import com.my.erp.sys.domain.Permission;
 import com.my.erp.sys.domain.Role;
 import com.my.erp.sys.domain.User;
@@ -18,6 +19,8 @@ import com.my.erp.sys.service.RoleService;
 import com.my.erp.sys.vo.RoleVo;
 import com.sun.org.apache.bcel.internal.generic.NEW;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -39,6 +42,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/role")
 public class RoleController {
+
+    private final static Logger logger = LoggerFactory.getLogger(RoleController.class);
+
     @Autowired
     private RoleService roleService;
 
@@ -72,33 +78,34 @@ public class RoleController {
      * @param session
      * @return
      */
-
+    @Log("添加角色")
     @RequestMapping("/addRole")
     public ResultObj addRole(RoleVo roleVo, HttpSession session){
         try {
-            User user =(User) session.getAttribute("user");
             roleVo.setCreatetime(new Date());
             roleService.save(roleVo);
             return ResultObj.ADD_SUCCESS;
         } catch (Exception e) {
+            logger.error(e.toString());
             e.printStackTrace();
             return ResultObj.ADD_ERROR;
         }
     }
 
     /**
-     * 更新
+     * 更新角色
      * @param roleVo
      * @param session
      * @return
      */
+    @Log("更新角色")
     @RequestMapping("/updateRole")
     public ResultObj updateRole(RoleVo roleVo, HttpSession session){
         try {
-            User user =(User) session.getAttribute("user");
             roleService.updateById(roleVo);
             return ResultObj.UPDATE_SUCCESS;
         } catch (Exception e) {
+            logger.error(e.toString());
             e.printStackTrace();
             return ResultObj.UPDATE_ERROR;
         }
@@ -110,12 +117,14 @@ public class RoleController {
      * @param id
      * @return
      */
+    @Log("删除角色")
     @RequestMapping("/deleteRole")
     public ResultObj batchDeleteRole(Integer id){
         try {
             roleService.removeById(id);
             return ResultObj.DELETE_SUCCESS;
         } catch (Exception e) {
+            logger.error(e.toString());
             e.printStackTrace();
             return  ResultObj.DELETE_ERROR;
         }
@@ -141,7 +150,7 @@ public class RoleController {
         }
         //构造list<TreeNode>
         List<TreeNode> nodes = new ArrayList<>();
-        System.out.println("currentPermission"+currentPermission);
+
         for (Permission permission : allPermission) {
             String checkArr = "0";
             //判断是否在时选中状态
@@ -164,6 +173,7 @@ public class RoleController {
             roleService.saveRolePermission(rid,ids);
             return ResultObj.ADD_SUCCESS;
         }catch (Exception e){
+            logger.error(e.toString());
             e.printStackTrace();
             return ResultObj.ADD_ERROR;
         }

@@ -132,8 +132,9 @@ public class GoodsController {
     public ResultObj batchDeleteGoods(Integer id,String goodsimg){
         try {
             //删除原文件
-            MyFileUtils.removeFileByPath(goodsimg);
             goodsService.removeById(id);
+            if(!goodsimg.equals(Constast.IMG_DEFAUL))
+            MyFileUtils.removeFileByPath(goodsimg);
             return ResultObj.DELETE_SUCCESS;
         } catch (Exception e) {
             e.printStackTrace();
