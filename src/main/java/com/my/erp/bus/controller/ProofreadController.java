@@ -44,9 +44,9 @@ public class ProofreadController {
 
     private final static Logger logger = LoggerFactory.getLogger(ProofreadController.class);
 
-    private final static int YWID = 11;
-    private final static int JLID = 12;
-    private final static int CWID = 13;
+    private  static int YWID = 11;
+    private  static int JLID = 12;
+    private  static int CWID = 13;
 
     @Autowired
     private ProofreadService proofreadService;
@@ -64,7 +64,7 @@ public class ProofreadController {
      * @return
      */
     @RequestMapping("/loadAllProofread")
-    public DataGridView loadAllProofread(ProofreadVo proofreadVo) {
+    public DataGridView loadAllProofread(ProofreadVo proofreadVo,HttpSession session) {
         //创建page对象
         IPage<Proofread> page = new Page<>(proofreadVo.getPage(), proofreadVo.getLimit());
         //创建条件器

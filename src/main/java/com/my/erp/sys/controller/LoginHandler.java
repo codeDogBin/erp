@@ -3,12 +3,14 @@ package com.my.erp.sys.controller;
 import cn.hutool.captcha.CaptchaUtil;
 import cn.hutool.captcha.LineCaptcha;
 
+import com.my.erp.bus.service.ProofreadService;
 import com.my.erp.sys.common.ActiverUser;
 import com.my.erp.sys.common.ResultObj;
 
 import com.my.erp.sys.domain.Loginfo;
 import com.my.erp.sys.domain.User;
 import com.my.erp.sys.service.LoginfoService;
+import com.my.erp.sys.service.UserService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -26,6 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 
 @RestController
 @RequestMapping("login")
@@ -40,6 +43,7 @@ public class LoginHandler {
 
     @Autowired
     private LoginfoService loginfoService;
+
     //hutool验证码工具
     private LineCaptcha lineCaptcha;
 

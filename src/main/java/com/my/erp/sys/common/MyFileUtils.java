@@ -93,7 +93,7 @@ public class MyFileUtils {
      * @param oldPath
      */
     public static void removeFileByPath(String oldPath) {
-        if(!Constast.IMG_DEFAUL.equals(oldPath)) {
+        if(!Constast.IMG_DEFAUL.equals(oldPath) && !Constast.IMG2_DEFAUL.equals(oldPath)) {
             File file = new File(UPLOAD_PATH, oldPath);
             if (file.exists()) {
                 file.delete();

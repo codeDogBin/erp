@@ -10,9 +10,7 @@ import com.my.erp.sys.common.ResultObj;
 import com.my.erp.sys.common.TreeNode;
 import com.my.erp.sys.domain.Permission;
 import com.my.erp.sys.service.PermissionService;
-import com.my.erp.sys.service.impl.PermissionServiceImpl;
 import com.my.erp.sys.vo.PermissionVo;
-import com.sun.org.apache.regexp.internal.RE;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.xml.crypto.Data;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

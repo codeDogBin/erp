@@ -1,10 +1,8 @@
 package com.my.erp.sys.controller;
 
 
-import cn.hutool.core.convert.Convert;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.my.erp.sys.common.Constast;
 import com.my.erp.sys.common.DataGridView;
@@ -13,11 +11,9 @@ import com.my.erp.sys.common.TreeNode;
 import com.my.erp.sys.config.Log;
 import com.my.erp.sys.domain.Permission;
 import com.my.erp.sys.domain.Role;
-import com.my.erp.sys.domain.User;
 import com.my.erp.sys.service.PermissionService;
 import com.my.erp.sys.service.RoleService;
 import com.my.erp.sys.vo.RoleVo;
-import com.sun.org.apache.bcel.internal.generic.NEW;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

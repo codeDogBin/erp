@@ -1,6 +1,7 @@
 package com.my.erp.sys.controller;
 
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.PinyinUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -10,6 +11,7 @@ import com.my.erp.bus.domain.Customer;
 import com.my.erp.bus.service.CustomerService;
 import com.my.erp.sys.common.Constast;
 import com.my.erp.sys.common.DataGridView;
+import com.my.erp.sys.common.MyFileUtils;
 import com.my.erp.sys.common.ResultObj;
 import com.my.erp.sys.config.Log;
 import com.my.erp.sys.domain.Dept;
@@ -27,7 +29,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -67,7 +73,6 @@ public class UserController {
     public DataGridView loadAllUser(UserVo userVo) {
         IPage<User> page = new Page<>(userVo.getPage(), userVo.getLimit());
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-
         queryWrapper.like(StringUtils.isNoneBlank(userVo.getName()), "name", userVo.getName())
                 .or().like(StringUtils.isNoneBlank(userVo.getName()), "loginname", userVo.getName());
         queryWrapper.like(StringUtils.isNoneBlank(userVo.getAddress()), "address", userVo.getAddress());
@@ -177,6 +182,7 @@ public class UserController {
             userVo.setHiredate(new Date());
             //生成盐
             String salt = IdUtil.simpleUUID().toUpperCase();
+            userVo.setImgpath(Constast.IMG2_DEFAUL);
             userVo.setSalt(salt);
             //设置密码 使用shiro的md5加密
             userVo.setPwd(new Md5Hash(Constast.USER_DEFAULT_PWD, salt, 2).toString());
@@ -315,6 +321,47 @@ public class UserController {
         return new DataGridView(Long.valueOf(listMaps.size()), listMaps);
     }
 
+
+    /**
+     * 头像上传
+     */
+    @RequestMapping("updateImg")
+    public ResultObj uploadFile(MultipartFile mf,HttpSession session){
+        try {
+            //1.得到文件名
+            String oldname = mf.getOriginalFilename();
+            //2.根据文件名生产新的文件名
+            String newName =  MyFileUtils.createNewFileName(oldname);
+            //3.得到当前日期的
+            String dirName = DateUtil.format(new Date(),"yyyy-MM-dd");
+            //4.构造文件夹
+            File dirFile = new File(MyFileUtils.UPLOAD_PATH+dirName);
+            //5.判断文件夹是否存在
+            if(!dirFile.exists()){
+                dirFile.mkdirs();
+            }
+            //6.构造文件对象
+            File file = new File(dirFile,newName);
+            //7 把mf里面的图片信息写入file
+            try {
+                mf.transferTo(file);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            User user = (User)session.getAttribute("user");
+            String imgpath = user.getImgpath();
+            MyFileUtils.removeFileByPath(imgpath);
+            user.setImgpath(dirName+"/"+newName);
+            userService.updateById(user);
+            return ResultObj.UPDATE_SUCCESS;
+        } catch (IllegalStateException e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return ResultObj.UPDATE_ERROR;
+        }
+    }
+
+
     /**
      * 保存用户和角色之间的关系
      */
@@ -330,5 +377,7 @@ public class UserController {
             return ResultObj.DISPATCH_ERROR;
         }
     }
+
+
 }
 

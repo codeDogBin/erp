@@ -35,6 +35,7 @@ public interface Constast {
 
     //默认图片传输地址
     String IMG_DEFAUL = "img/default.jpg";
+    String IMG2_DEFAUL = "img/head.jpg";
 
     //对应的审核状态
     /**

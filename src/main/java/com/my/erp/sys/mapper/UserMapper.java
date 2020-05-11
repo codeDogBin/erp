@@ -26,6 +26,5 @@ public interface UserMapper extends BaseMapper<User> {
     @Insert("INSERT INTO SYS_ROLE_USER(UID,RID) VALUES(#{uid},#{rid})")
     void insertUserRole(@Param("uid") Integer uid, @Param("rid") Integer rid);
 
-    @Select("SELECT RID FROM SYS_ROLE_USER WHERE UID = #{ID}")
-    Integer getRoleIDByUserID(Integer id);
+
 }

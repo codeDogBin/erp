@@ -1,15 +1,9 @@
 package com.my.erp.sys.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
-import com.baomidou.mybatisplus.core.injector.methods.UpdateById;
 import com.my.erp.sys.domain.User;
-import com.my.erp.sys.mapper.RoleMapper;
 import com.my.erp.sys.mapper.UserMapper;
-import com.my.erp.sys.service.RoleService;
 import com.my.erp.sys.service.UserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.sun.xml.internal.bind.v2.model.core.ID;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -65,8 +59,4 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     }
 
-    @Override
-    public Integer getRoleIDByUserID(Integer id) {
-       return  getBaseMapper().getRoleIDByUserID(id);
-    }
 }

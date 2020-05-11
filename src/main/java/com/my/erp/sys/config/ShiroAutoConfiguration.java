@@ -36,11 +36,11 @@ public class ShiroAutoConfiguration {
     private static final String SHIRO_FILTER = "shiroFilter";//变量
     private String hashAlgorithmName = "md5";//加密方式
     private int hashIteration = 2;//散列次数
-    private String loginUrl = "/4xx.html";//默认登录页
+    private String loginUrl = "/index.html";//默认登录页
     private String logoutUrl = "/sys/toLogout";//登出路径
-    private String[] annoUrls ;//放行路径
-    // {"/4xx.html","/sys/toLogin","/login/**","/file/**","/img/**","/resources/**"};
-    private String[] authcUrls  ;//拦截路径
+    private String[] annoUrls = {"index.html","/sys/toLogin","/login/**","/file/**","/img/**","/resources/**"} ;//放行路径
+    //{"/4xx.html","/sys/toLogin","/login/**","/file/**","/img/**","/resources/**"};
+    private String[] authcUrls ={"/**"}  ;//拦截路径
     // {"/**"}
 
     /**

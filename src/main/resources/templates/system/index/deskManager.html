@@ -18,14 +18,15 @@
 	</blockquote>
 	<div class="layui-row layui-col-space10">
 		<div class="layui-col-lg6 layui-col-md12">
-			<blockquote class="layui-elem-quote title">最新文章 <i class="layui-icon layui-red">&#xe756;</i></blockquote>
-			<table class="layui-table mag0" lay-skin="line">
-				<colgroup>
-					<col>
-					<col width="110">
-				</colgroup>
-				<tbody class="hot_news"></tbody>
-			</table>
+			<blockquote class="layui-elem-quote title">名扬风采 <i class="layui-icon layui-red">&#xe756;</i></blockquote>
+			<!--轮播图-->
+			<div class="layui-carousel" id="test10" style="text-align:center" >
+				<div carousel-item="">
+					<div><img style="height: 100%;width: 100%;" src="/img/my01.jpg"></div>
+					<div><img style="height: 100%;width: 100%;" src="/img/my02.jpg"></div>
+					<div><img style="height: 100%;width: 100%;" src="/img/my03.jpg"></div>
+				</div>
+			</div>
 		</div>
 	</div>
 
@@ -33,7 +34,6 @@
 <script>
 	//获取当前当前登录人信息
 	var currentUserName = '[[${session.user.name}]]';
-
 	//获取系统时间
 	var newDate = '';
 	getLangDate();
@@ -59,11 +59,12 @@
 		setTimeout("getLangDate()",1000);
 	}
 
-	layui.use(['form','element','layer','jquery'],function(){
+	layui.use(['form','element','layer','jquery','carousel'],function(){
 		var form = layui.form,
-				layer = parent.layer === undefined ? layui.layer : top.layer,
-				element = layui.element;
+		layer = parent.layer === undefined ? layui.layer : top.layer,
+		element = layui.element;
 		$ = layui.jquery;
+		var carousel = layui.carousel;
 		//上次登录时间【此处应该从接口获取，实际使用中请自行更换】
 		$(".loginTime").html(newDate.split("日")[0]+"日</br>"+newDate.split("日")[1]);
 		//icon动画
@@ -75,6 +76,14 @@
 		$(".panel a").click(function(){
 			parent.addTab($(this));
 		})
+
+		carousel.render({
+			elem: '#test10'
+			,width: '1000px'
+			,height: '600px'
+			,interval: 5000
+		});
+
 
 		//最新文章列表
 		$.get("/resources/json/newsList.json",function(data){
