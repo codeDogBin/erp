@@ -1,7 +1,7 @@
 html,
 body {
-    height: 100%;
-    width: 100%;
+    /*height: 100%;*/
+    /*width: 100%;*/
     background-color: #F9F9EC;
     border: 1px solid transparent;
 }
@@ -32,9 +32,15 @@ body {
     vertical-align:middle;
 }
 
+#folderSpace{
+    display: flex;
+    align-content: center;
+    flex-wrap: wrap;
+}
+
 .folderZone > ul > li,
 .filesZone > ul > li {
-    float: left;
+    /*float: left;*/
     margin: 10px 20px;
 }
 
@@ -103,7 +109,9 @@ h3 {
 .fileName a {
     display: block;
     width: 100%;
+    height: 21px;
     color: blue;
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
 }

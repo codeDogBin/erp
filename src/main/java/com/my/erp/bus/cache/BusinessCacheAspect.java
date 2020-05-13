@@ -1,10 +1,7 @@
 package com.my.erp.bus.cache;
 
 
-import com.my.erp.bus.domain.Customer;
-import com.my.erp.bus.domain.Goods;
-import com.my.erp.bus.domain.Proofread;
-import com.my.erp.bus.domain.Provider;
+import com.my.erp.bus.domain.*;
 import com.my.erp.sys.cache.CachePool;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -440,7 +437,77 @@ public class BusinessCacheAspect {
         }
         return isSuccess;
     }
-
-
     
+    
+    //声明切面表达式
+    private static final String POINTCUT_COMPANY_UPDATE="execution (* com.my.erp.bus.service.impl.CompanyServiceImpl.updateById(..))";
+    private static final String POINTCUT_COMPANY_GET="execution (* com.my.erp.bus.service.impl.CompanyServiceImpl.getById(..))";
+    private static final String POINTCUT_COMPANY_ADD="execution (* com.my.erp.bus.service.impl.CompanyServiceImpl.registerCompany(..))";
+    
+    private static final String CACHE_COMPANY_PROFIX="company:";
+
+    /**
+     * 公司查询切入
+     */
+    @Around(value=POINTCUT_COMPANY_GET)
+    public Object cacheCompanyGet(ProceedingJoinPoint joinPoint) throws Throwable {
+        //取出第一个参数
+        Integer id =(Integer) joinPoint.getArgs()[0];
+        //查询缓存中是否有数据
+        Company result =(Company) CACHE_CONTAINER.get(CACHE_COMPANY_PROFIX+id);
+        log.info("已从缓存中找到公司对象"+CACHE_COMPANY_PROFIX+id);
+        if(result!=null){
+            return result;
+        }else{
+            //将数据存入缓存 并且返回
+            log.info("未从缓存中找到公司对象,去数据库查询并放入缓存");
+            Company res2 = (Company) joinPoint.proceed();
+            CACHE_CONTAINER.put(CACHE_COMPANY_PROFIX+res2.getId(), res2);
+            return res2;
+        }
+    }
+
+    /**
+     * 公司更新的切入
+     * @param joinPoint
+     * @return
+     * @throws Throwable
+     */
+    @Around(value=POINTCUT_COMPANY_UPDATE)
+    public Object cacheCompanyUpdate(ProceedingJoinPoint joinPoint) throws Throwable {
+        //取出第一个参数
+        Company company = (Company) joinPoint.getArgs()[0];
+        Boolean isSuccess = (Boolean) joinPoint.proceed();
+        if (isSuccess) {
+            Company newcompany = (Company) CACHE_CONTAINER.get(company.getId());
+            if (null == newcompany) {
+                newcompany = new Company();
+                BeanUtils.copyProperties(company, newcompany);
+                log.info("公司对象缓存已更新"+CACHE_COMPANY_PROFIX + newcompany.getId());
+                CACHE_CONTAINER.put(CACHE_COMPANY_PROFIX + newcompany.getId(), newcompany);
+            }
+        }
+        return isSuccess;
+    }
+
+    /**
+     * 公司添加的切入
+     * @param joinPoint
+     * @return
+     * @throws Throwable
+     */
+    @Around(value=POINTCUT_COMPANY_ADD)
+    public Object cacheCompanyAdd(ProceedingJoinPoint joinPoint) throws Throwable {
+        //取出第一个参数
+        Company company = (Company) joinPoint.getArgs()[0];
+        //执行目标方法
+        Boolean isSuccess = (Boolean) joinPoint.proceed();
+        if (isSuccess) {
+            CACHE_CONTAINER.put(CACHE_COMPANY_PROFIX + company.getId(), company);
+            log.info("公司对象缓存已增加"+CACHE_COMPANY_PROFIX + company.getId());
+        }
+        return isSuccess;
+    }
+
+
 }

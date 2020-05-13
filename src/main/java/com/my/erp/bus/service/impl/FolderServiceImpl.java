@@ -183,7 +183,7 @@ public class FolderServiceImpl extends ServiceImpl<FolderMapper, Folder> impleme
         int fway_id=folder.getFwayid();
         //递归阶段
         if(fway_id==0){
-            Company company = companyMapper.findCompanyById(folder.getCompanyid());
+            Company company = companyMapper.selectById(folder.getCompanyid());
             way.append(company.getName()).append(File.separator).append(folder.getName()).append(File.separator);
             wayMap.put(folder.getId(),way.toString());
         }else{//如果不是公司 尝试去数据库中查找地址

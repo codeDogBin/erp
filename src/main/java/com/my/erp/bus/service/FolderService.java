@@ -4,6 +4,7 @@ import com.my.erp.bus.domain.Company;
 import com.my.erp.bus.domain.Fil;
 import com.my.erp.bus.domain.Folder;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
@@ -19,6 +20,7 @@ import java.util.Map;
  * @author bin
  * @since 2020-05-06
  */
+@Service
 public interface FolderService extends IService<Folder> {
     /*
      * 功能描述 新增文件夹

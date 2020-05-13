@@ -7,6 +7,7 @@ import cn.hutool.core.util.PinyinUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.generator.config.IFileCreate;
 import com.my.erp.bus.domain.Customer;
 import com.my.erp.bus.service.CustomerService;
 import com.my.erp.sys.common.Constast;
@@ -83,7 +84,6 @@ public class UserController {
         for (User user : list) {
             Integer deptid = user.getDeptid();
             if (deptid != null) {
-                ;
                 Dept one = deptService.getById(deptid);
                 user.setDeptname(one.getTitle());
             }
@@ -224,10 +224,18 @@ public class UserController {
     public ResultObj deleteUser(Integer id) {
         try {
             User user = userService.getById(id);
+            //判断是用户是不是客户 如果是客户 则不允许删除
             Integer customerid = user.getCustomerid();
             Integer integer = customerService.getccByCusId(customerid);
             if(integer!=0){
-                return ResultObj.DELETE_ERROR;
+                return new ResultObj(-1,"客户不允许删除");
+            }
+            //判断用户是否有下属,如果有下属 不允许删除
+            QueryWrapper queryWrapper = new QueryWrapper();
+            queryWrapper.eq(id!=null&&id!=0,"mgr",id);
+            List list = userService.list(queryWrapper);
+            if(list != null && list.size() != 0){
+                return new ResultObj(-1,"有下属的员工不允许删除");
             }
             userService.removeById(id);
             return ResultObj.DELETE_SUCCESS;

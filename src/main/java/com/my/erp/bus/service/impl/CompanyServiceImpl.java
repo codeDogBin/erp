@@ -4,7 +4,6 @@ import com.my.erp.bus.domain.Company;
 import com.my.erp.bus.mapper.CompanyMapper;
 import com.my.erp.bus.service.CompanyService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,7 +27,7 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
      * @return boolean
      */
     public boolean registerCompany(Company company){
-        int x = getBaseMapper().insertCompany(company);
+        int x = getBaseMapper().insert(company);
         return  x==1?true:false;
     }
     /*
@@ -37,8 +36,8 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
      * @param companyId
      * @return com.bin.domain.Company
      */
-    public Company selectCompany(int companyId){
-        return getBaseMapper().findCompanyById(companyId);
+    public Company getById(int companyId){
+        return getBaseMapper().selectById(companyId);
     }
     /*
      * 功能描述 通过用户id查询公司
@@ -77,13 +76,7 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
         companyName="%"+companyName+"%";
         return getBaseMapper().selectByNameNoPage(companyName);
     }
-    public Integer SelectCountByName(String companyName){
-        companyName="%"+companyName+"%";
-        return getBaseMapper().selectCountByName(companyName);
-    }
-    public Integer getAllCompanyCount(){
-        return getBaseMapper().getAllCompanyCount();
-    }
+
 
     public Company findByName(String name){
         return getBaseMapper().findCompanyByName(name);
@@ -99,15 +92,11 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
      * @param customerid
      * @return java.util.List<com.bin.domain.User_Company>
      */
-    public List<Company> selectCompanyByCustomerId(int customerid){
-        return getBaseMapper().selectCompanyByCustomerId(customerid);
-    }
+
 
     public void delCustomerCompany(Integer customerid,Integer companyid){
         getBaseMapper().deleteCustomerCompany(customerid,companyid);
     }
 
-    public Integer getCompanyCountByCustomerID(int customerid){
-        return getBaseMapper().getCompanyCountByCustomerID(customerid);
-    }
+
 }

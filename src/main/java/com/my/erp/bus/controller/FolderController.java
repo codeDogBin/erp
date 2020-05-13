@@ -43,6 +43,7 @@ import java.util.Map;
 public class FolderController {
 
     private final static Logger logger = LoggerFactory.getLogger(FolderController.class);
+
     @Autowired
     private FolderService folderService;
     @Autowired
@@ -68,7 +69,6 @@ public class FolderController {
             HttpSession session = request.getSession();
             session.setAttribute("company_id",company_id);
             session.setAttribute("fway_id",tofway_id);
-            System.out.println("设置session：company_id:"+company_id+"fway_id:"+tofway_id);
         } catch (Exception e) {
             logger.error(e.toString());
             e.printStackTrace();
@@ -86,11 +86,10 @@ public class FolderController {
         //查询当前目录的文件夹
         List<Folder> folders = folderService.findByFidCid(fway_id, company_id);
         //查问当前目录的文件
-        Company company = companyService.selectCompany(company_id);
+        Company company = companyService.getById(company_id);
         List<Fil> fils = filService.FindByFid(fway_id);
-        for (Fil fil : fils) {
-            fil.setImgway(fil.getImgway().replaceAll("\\\\","/"));
-        }
+        //设置img的照片
+        fils = ImgUtil.setImgs(fils);
         //文件路径
         List<Folder> ways = new ArrayList<>();
         //查找当前文件夹的位置
@@ -124,7 +123,7 @@ public class FolderController {
             map.put("msg","有同名文件夹");
             return map;
         }
-        String fway =fway_id == 0 ?companyService.selectCompany(company_id).getWay():folderService.findByFidAsId(fway_id).getWay();
+        String fway =fway_id == 0 ?companyService.getById(company_id).getWay():folderService.findByFidAsId(fway_id).getWay();
         try {
             fway = CreateFolderUtil.createFolder(fway);
             Folder folder = new Folder();

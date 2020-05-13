@@ -5,10 +5,15 @@ import com.my.erp.sys.realm.UserRealm;
 import lombok.Data;
 import org.apache.shiro.authc.credential.CredentialsMatcher;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
+import org.apache.shiro.cache.MemoryConstrainedCacheManager;
 import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.session.mgt.eis.MemorySessionDAO;
+import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.apache.shiro.web.servlet.SimpleCookie;
+import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -43,6 +48,34 @@ public class ShiroAutoConfiguration {
     private String[] authcUrls ={"/**"}  ;//拦截路径
     // {"/**"}
 
+    //新增开始
+    //为了增加踢人功能
+    @Bean(name = "lifecycleBeanPostProcessor")
+    public LifecycleBeanPostProcessor getLifecycleBeanPostProcessor() {
+        return new LifecycleBeanPostProcessor();
+    }
+
+
+    // 配置sessionDAO s
+    @Bean(name="sessionDAO")
+    public MemorySessionDAO getMemorySessionDAO(){
+        MemorySessionDAO sessionDAO = new MemorySessionDAO();
+        return sessionDAO;
+    }
+
+    //配置shiro session 的一个管理器
+    @Bean(name = "sessionManager")
+    public DefaultWebSessionManager getDefaultWebSessionManager() {
+        DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
+        // 设置session过期时间
+        sessionManager.setGlobalSessionTimeout(60 * 60 * 1000);
+        // 请注意看代码
+        sessionManager.setSessionDAO(getMemorySessionDAO());
+        return sessionManager;
+    }
+
+    //新增结束
+
     /**
      *声明凭证匹配器
      */
@@ -70,8 +103,13 @@ public class ShiroAutoConfiguration {
         DefaultWebSecurityManager SecurityManager =new DefaultWebSecurityManager();
         //注入UserReam
         SecurityManager.setRealm(userRealm);
+        //注入session管理
+        SecurityManager.setSessionManager( getDefaultWebSessionManager() );
         return SecurityManager;
     }
+
+
+
     /**
      * 配置shiro过滤器
      */
@@ -101,6 +139,7 @@ public class ShiroAutoConfiguration {
                 filterMap.put(authcUrl,"authc");
             }
         }
+
         factoryBean.setFilterChainDefinitionMap(filterMap);
         return factoryBean;
     }

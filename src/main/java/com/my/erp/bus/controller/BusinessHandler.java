@@ -98,7 +98,7 @@ public class BusinessHandler {
      */
     @RequestMapping("/toFolder.do")
     public String toFolder() {
-        return "/business/file/folder";
+        return "business/file/folder";
     }
 }
 

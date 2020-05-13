@@ -1,8 +1,7 @@
 package com.my.erp.bus.controller;
 
 
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.IoUtil;
+
 import com.my.erp.bus.domain.Fil;
 import com.my.erp.bus.domain.Folder;
 import com.my.erp.bus.service.FilService;
@@ -11,16 +10,13 @@ import com.my.erp.sys.common.ImgUtil;
 import com.my.erp.sys.common.MyFileUtils;
 import com.my.erp.sys.common.TimeUtil;
 import com.my.erp.sys.config.Log;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -53,15 +49,6 @@ public class FilController {
     @Autowired
     private AutoController autoController;
 
-    private static String[] suffixes=new String[]{"jpg","JPG","png","PNG","jpeg","bmp","gif"};
-
-    public static boolean isImg(String suffix){
-        for (String s : suffixes) {
-            if(s.equals(suffix))
-                return true;
-        }
-        return false;
-    }
 
     /*
      * 功能描述 上传文件
@@ -101,7 +88,6 @@ public class FilController {
                     //上传目的地（staticResourcesTest文件夹下）
                     File file = new File(filePath, way);
                     origFile.transferTo(file);
-                    ImgUtil.createImg(fil);
                     filService.insertFil(fil);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -136,7 +122,7 @@ public class FilController {
         Fil fil = filService.findById(id);
         File file = new File(fil.getWay());
         String suffix = name.substring(name.lastIndexOf(".")+1);
-        if(!isImg(suffix)){
+        if(!ImgUtil.isImg(suffix)){
             name = URLEncoder.encode(name, "UTF-8");
             //设置响应的contentType开启下载模式
             response.setContentType("application/x-msdownload");
@@ -165,10 +151,6 @@ public class FilController {
         try {
             fil.setState(0);
             fil = filService.chongMing(fil);
-            if(isImg(fil.getName().substring(fil.getName().lastIndexOf(".")+1))){
-                request.getSession().setAttribute("imgWay",fil.getImgway());
-                fil.setImgway("");
-            }
             fil.setDeltime(new Timestamp(System.currentTimeMillis()));
             filService.expireFil(fil);
         } catch (Exception e) {

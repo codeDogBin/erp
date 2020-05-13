@@ -3,6 +3,7 @@ package com.my.erp.bus.service;
 import com.my.erp.bus.domain.Company;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -28,7 +29,13 @@ public interface CompanyService extends IService<Company> {
      * @param companyId
      * @return com.bin.domain.Company
      */
-    public Company selectCompany(int companyId);
+
+
+
+    @Override
+    Company getById(Serializable id);
+
+
     /*
      * 功能描述 通过用户id查询公司
      * @Author bin
@@ -58,18 +65,15 @@ public interface CompanyService extends IService<Company> {
     public List<Company> SelectByNameNoPage(String companyName);
 
 
-    public Integer SelectCountByName(String companyName);
 
-    public Integer getAllCompanyCount();
 
     public Company findByName(String name);
 
     boolean insertCustomerCompany(Integer customerid,Integer companyid);
 
-    List<Company> selectCompanyByCustomerId(int customerid);
+
 
     public void delCustomerCompany(Integer customerid,Integer companyid);
 
-    public Integer getCompanyCountByCustomerID(int customerid);
-    
+
 }

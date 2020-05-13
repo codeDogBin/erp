@@ -20,21 +20,18 @@ public class ImgUtil {
         return false;
     }
 
-    public static List<Fil> getImg(List<Fil> fils) throws IOException {
+    public static List<Fil> setImgs(List<Fil> fils) throws IOException {
             for (Fil fil : fils) {
-                if(fil.getImgway()==null){
-                createImg(fil);
-                }
+                setImg(fil);
             }
             return fils;
         }
 
-
-    public static void createImg(Fil fil) throws IOException {
+    public static void setImg(Fil fil) throws IOException {
         String suffix = fil.getName().substring(fil.getName().lastIndexOf(".")+1);
         if(isImg(suffix)){//判断是否为照片文件
             String imgWay = fil.getWay();
-            imgWay= imgWay.substring(MyFileUtils.UPLOAD_PATH.length());
+            imgWay= imgWay.substring(MyFileUtils.UPLOAD_PATH.length()).replaceAll("\\\\","/");
             fil.setImgway(imgWay);
         }else if("doc".equals(suffix)||"docx".equals(suffix)){
             fil.setImgway("img/doc.jpg");

@@ -19,12 +19,6 @@ import java.util.List;
 @Repository
 public interface CompanyMapper extends BaseMapper<Company> {
 
-    @Insert("insert into bus_company (name,way,ctime) values (#{name},#{way},#{ctime});")
-    @Options(useGeneratedKeys = true , keyProperty = "id", keyColumn = "id")
-    Integer insertCompany(Company bus_company);
-
-    @Select("select * from bus_company where id = #{bus_company_id} limit 1")
-    Company findCompanyById(int bus_companyId);
 
     @Select("select c.* from bus_customer_company as cc, bus_company as c where cc.customerid = #{customerid} and cc.companyid = c.id limit #{start},20")
     List<Company> findCompanyByCustomerIDLimit(@Param("customerid") int customer, @Param("start") int start);
@@ -38,11 +32,7 @@ public interface CompanyMapper extends BaseMapper<Company> {
     @Select("select * from bus_company where name like #{name} limit 100")
     List<Company> selectByName(@Param("name") String name);
 
-    @Select("select count(id) from bus_company")
-    Integer getAllCompanyCount();
 
-    @Select("select count(id) from bus_company where name like #{name}")
-    Integer selectCountByName(String bus_companyName);
 
     @Select("select * from bus_company where name like #{name}")
     List<Company> selectByNameNoPage(String bus_companyName);
@@ -54,12 +44,10 @@ public interface CompanyMapper extends BaseMapper<Company> {
     @Insert("insert into bus_customer_company (customerid,companyid) values(#{customerid},#{companyid})   ")
     Integer insertCustomerCompany(Integer customerid,Integer companyid);
 
-    @Select("select c.* from bus_company as c ,bus_customer_company as cc where cc.customerid = #{customerid} and c.id = cc.companyid")
-    List<Company> selectCompanyByCustomerId(int customerId);
+
 
     @Delete("delete from bus_customer_company where customerid = #{customerid} and companyid = #{companyid}")
     void deleteCustomerCompany(Integer customerid,Integer companyid );
 
-    @Select("select count(company_id) from customer_company where customerid = #{customerid}")
-    Integer getCompanyCountByCustomerID(int customerid);
+
 }

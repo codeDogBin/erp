@@ -4,7 +4,7 @@ spring:
   datasource:
     druid:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://127.0.0.1:3306/0520erp?useUnicode=true&characterEncoding=utf8&useSSL=true&serverTimezone=Asia/Shanghai
+      url: jdbc:mysql://192.168.123.110:3306/0520erp?useUnicode=true&characterEncoding=utf8&useSSL=true&serverTimezone=Asia/Shanghai
       username: root
       password: root
       # druid专属配制
