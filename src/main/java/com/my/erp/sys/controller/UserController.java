@@ -67,6 +67,8 @@ public class UserController {
     @Autowired
     private RoleService roleService;
 
+    private Integer[] rids = {18};
+
     /**
      * 用户全查询
      */
@@ -187,6 +189,9 @@ public class UserController {
             //设置密码 使用shiro的md5加密
             userVo.setPwd(new Md5Hash(Constast.USER_DEFAULT_PWD, salt, 2).toString());
             userService.save(userVo);
+            if( null !=userVo.getCustomerid() && 0 !=userVo.getCustomerid() ){
+                userService.saveUserRole(userVo.getId(),rids);
+            }
             return ResultObj.ADD_SUCCESS;
         } catch (Exception e) {
             logger.error(e.toString());

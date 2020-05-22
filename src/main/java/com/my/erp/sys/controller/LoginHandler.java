@@ -14,6 +14,7 @@ import com.my.erp.sys.service.UserService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,9 +65,19 @@ public class LoginHandler {
         UsernamePasswordToken token = new UsernamePasswordToken(loginname, pwd);//将用户名和密码设置为令牌
         try {
             subject.login(token);//使用shiro执行登录
-            ActiverUser activerUser =( ActiverUser) subject.getPrincipal();//获取登录凭证
+
+            ActiverUser activerUser = (ActiverUser) subject.getPrincipal();//获取登录凭证
+            User user = activerUser.getUser();
+            {//新增一个session 用于踢人
+                Session session = SecurityUtils.getSubject().getSession();
+                System.out.println("设置了这个USER_SESSION:" + user);
+                session.setAttribute("USER_SESSION", user);
+                session.setTimeout(3600 * 1000);
+            }
             HttpSession session = request.getSession();//获取session
-            session.setAttribute("user",activerUser.getUser());//将对象存储到session
+            session.setAttribute("user", activerUser.getUser());//将对象存储到session
+
+
             //创建一个登录日志对象
             Loginfo entity = new Loginfo();
             entity.setLoginname(activerUser.getUser().getName()+"-"+activerUser.getUser().getLoginname());
@@ -74,6 +85,9 @@ public class LoginHandler {
             entity.setLogintime(new Date());
             ///存入数据库
             loginfoService.save(entity);
+            if(activerUser.getUser().getCustomerid()!=0){
+                return ResultObj.LOGIN_SUCCESS_CUSTOMER;
+            }
             return  ResultObj.LOGIN_SUCCESS;//返回登录成功
         } catch (AuthenticationException e) {
             logger.error(e.toString());
@@ -81,7 +95,6 @@ public class LoginHandler {
             return ResultObj.LOGIN_ERROR_PASS;//返回登陆失败
         }
     }
-
 
     /**
      * 获取验证码的接口

@@ -18,6 +18,7 @@
 <div class="wrapper banner">
     <div class="pathZone">
         <div class="welcome"><h3><span class="red" id="name"></span>，您已进入文件编辑区</h3> </div>
+        <input type="hidden" id="customerid" th:value="${session.user.customerid}" >
         <div class="path">
             <div class="currentPath" id="way">当前路径：
             </div>
@@ -41,6 +42,7 @@
     <div class="folderZone">
         <div class="folderTip">文件列表</div>
         <ul class="clearfix" id="folderSpace">
+
         </ul>
     </div>
 </div>

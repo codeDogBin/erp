@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="UTF-8">
+    <title>客户管理</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="icon" href="/resources/favicon.ico">
+    <link rel="stylesheet" href="/resources/layui/css/layui.css" media="all" />
+    <link rel="stylesheet" href="/resources/css/public.css" media="all" />
+</head>
+<body class="childrenBody">
+<!--查询条件开始-->
+<fieldset class="layui-elem-field layui-field-title" style="margin-top: 5px;">
+    <legend>查询条件</legend>
+</fieldset>
+<blockquote class="layui-elem-quote">
+    <form action="" method="post" id="searchFrm" lay-filter="searchFrm" class="layui-form layui-form-pane">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">客户</label>
+                <div class="layui-input-inline">
+                    <select name="customerid" id="search_customerid" lay-search="">
+                        <option value="">请选择客户</option>
+                    </select>
+                </div>
+                <label class="layui-form-label">开始时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="startTime" id="start_time" readonly="readonly" autocomplete="off"
+                           class="layui-input">
+                </div>
+                <label class="layui-form-label">结束时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="endTime" id="end_time"   readonly="readonly"  autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block" style="text-align: center">
+                <button type="button" class="layui-btn" lay-submit="" lay-filter="doSearch"><span
+                        class="layui-icon layui-icon-search">查询</span></button>
+                <button type="reset" class="layui-btn layui-btn-normal"><span
+                        class="layui-icon layui-icon-refresh-3">重置</span></button>
+            </div>
+        </div>
+    </form>
+</blockquote>
+<!--查询条件结束-->
+
+<!--数据表格开始-->
+<div>
+    <table class="layui-hide" shiro:hasPermission="debt:view" id="debtTable" lay-filter="debtTable" >
+        <!--头工具条-->
+        <div id="debtToolBar" style="display:none">
+            <button type="button" shiro:hasPermission="debt:create" lay-event="add" class="layui-btn layui-btn  layui-btn-sm"><span class="layui-icon layui-icon-add-1">添加账单</span></button>
+        </div>
+
+        <!--行工具条-->
+        <div id="debtRowBar" style="display:none">
+            <button type="button" shiro:hasPermission="debt:update" lay-event="update" class="layui-btn layui-btn  layui-btn-xs"><span class="layui-icon layui-icon-edit">更新</span></button>
+            <button type="button" shiro:hasPermission="debt:cz" lay-event="cz" class="layui-btn layui-btn layui-btn-warm  layui-btn-xs"><span class="layui-icon layui-icon-auz">催账</span></button>
+            <button type="button" shiro:hasPermission="debt:audit" lay-event="audit" class="layui-btn layui-btn layui-btn-normal layui-btn-xs"><span class="layui-icon layui-icon-auz">到账</span></button>
+            <button type="button" shiro:hasPermission="debt:delete" lay-event="delete" class="layui-btn layui-btn-danger  layui-btn-xs"><span class="layui-icon layui-icon-delete">删除</span></button>
+        </div>
+    </table>
+</div>
+<!--数据表格结束-->
+<div shiro:hasPermission="dept:viewcz">
+<!--查询条件开始-->
+<fieldset class="layui-elem-field layui-field-title" style="margin-top: 5px;">
+    <legend>催账客户</legend>
+</fieldset>
+<!--数据表格开始-->
+<div>
+    <table class="layui-hide" shiro:hasPermission="debt:view" id="debtTable2" lay-filter="debtTable" >
+
+        <!--行工具条-->
+        <div id="debtRowBar2" style="display:none">
+            <button type="button" shiro:hasPermission="debt:update" lay-event="update" class="layui-btn layui-btn  layui-btn-xs"><span class="layui-icon layui-icon-edit">更新</span></button>
+            <button type="button" shiro:hasPermission="debt:cz" lay-event="cz" class="layui-btn layui-btn layui-btn-warm  layui-btn-xs"><span class="layui-icon layui-icon-auz">催账</span></button>
+            <button type="button" shiro:hasPermission="debt:audit" lay-event="audit" class="layui-btn  layui-btn-normal  layui-btn-xs"><span class="layui-icon layui-icon-auz">到账</span></button>
+            <button type="button" shiro:hasPermission="debt:delete" lay-event="delete" class="layui-btn layui-btn-danger  layui-btn-xs"><span class="layui-icon layui-icon-delete">删除</span></button>
+        </div>
+    </table>
+</div>
+<!--数据表格结束-->
+</div>
+<!--添加和修改的弹出层开始-->
+<div style="display: none;padding: 5px" id = "addOrUpdate" >
+    <form action="" method="post" class="layui-form layui-form-pane" id="dataFrm" lay-filter="dataFrm" >
+        <div class="layui-form-item">
+                <label class="layui-form-label">客户名称</label>
+                <div class="layui-input-block">
+                    <input type="hidden" name="id" id="id">
+                    <select name="customerid" id="customerid"  lay-verify="required" lay-search="" lay-filter="providerid">
+                        <option value="">请选择客户</option>
+                    </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">业务类型</label>
+            <div class="layui-input-inline">
+                <input type="radio" name="type" value="小规模记账" title="小规模记账" checked="" >
+                <input type="radio" name="type" value="一般纳税人" title="一般纳税人" >
+            </div>
+            <label class="layui-form-label">支付方式</label>
+            <div class="layui-input-inline">
+                <input type="radio" name="paytype" value="支付宝" title="支付宝" checked="" >
+                <input type="radio" name="paytype" value="微信" title="微信" >
+                <input type="radio" name="paytype" value="信用卡" title="信用卡" >
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">金额</label>
+            <div class="layui-input-inline">
+                <input type="number" name="price" lay-verify="required" autocomplete="off" placeholder="请输入金额" class="layui-input">
+            </div>
+            <label class="layui-form-label">优惠</label>
+            <div class="layui-input-inline">
+                <input type="text" name="discount" lay-verify="required" autocomplete="off" placeholder="请输入优惠信息" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">开始时间</label>
+            <div class="layui-input-inline">
+                <input type="text" name="starttime" id="starttime"   readonly="readonly"  autocomplete="off" class="layui-input">
+            </div>
+            <label class="layui-form-label">结束时间</label>
+            <div class="layui-input-inline">
+                <input type="text" name="endtime" id="endtime"   readonly="readonly"  autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">记账时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="dailitime" id="dailitime"   readonly="readonly"  autocomplete="off" class="layui-input">
+                </div>
+                <label class="layui-form-label">催账时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="cuizhangtime" id="cuizhangtime"   readonly="readonly"  autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline-block" style="text-align: center">
+                <button type="button" class="layui-btn" lay-submit="" lay-filter="doSubmit" id="doSubmit" ><span class="layui-icon layui-icon-search">提交</span></button>
+                <button type="reset" class="layui-btn layui-btn-normal"><span class="layui-icon layui-icon-refresh-3">重置</span></button>
+            </div>
+        </div>
+    </form>
+</div>
+<!--添加和修改的弹出层结束-->
+<script type="text/javascript" src="/resources/layui/layui.js"></script>
+<script type="text/html" id="priceTpl">
+    {{#  if(d.state === 1 ){ }}
+    <span style="color: #226DDD;">{{ d.price }}</span>
+    {{#  } else if(d.state === 2 ) { }}
+    <span style="color: #FF0033;">{{ d.price }}</span>
+    {{#  } else if(d.state === 3 ) {  }}
+    <span style="color: #EEC211;">{{ d.price }}</span>
+    {{#  } else if(d.state === 4 ) {  }}
+    <span style="color: #FFFF00;">{{ d.price }}</span>
+    {{#  } else{     }}
+    {{ d.price }}
+    {{# } }}
+</script>
+<script>
+    var tableIns;
+    var tableIns2;
+    layui.use(['jquery','form','table','layer','laydate'],function () {
+        var $ = layui.jquery;
+        var form = layui.form;
+        var table = layui.table;
+        var layer = layui.layer;
+        var laydate = layui.laydate;
+
+        laydate.render({
+            elem:'#start_time',
+            type:'datetime'
+        });
+        laydate.render({
+            elem:'#end_time',
+            type:'datetime'
+        });
+        laydate.render({
+            elem:'#starttime',
+            type:'datetime'
+        });
+        laydate.render({
+            elem:'#endtime',
+            type:'datetime'
+        });
+        laydate.render({
+            elem:'#dailitime',
+            type:'datetime'
+        });
+        laydate.render({
+            elem:'#cuizhangtime',
+            type:'datetime'
+        });
+
+
+        //加载数据
+          tableIns = table.render({
+            elem: '#debtTable'
+            , url: '/debt/loadAllDebt'
+            , toolbar: '#debtToolBar' //开启头部工具栏，并为其绑定左侧模板
+            , title: '客户表'
+            , height: 'full-220'
+            , page: true
+            , cols: [ [
+                  {type:'checkbox',align:'center'}
+                , {field: 'id', title: 'ID', align: 'center',width:"50"}
+                , {field: 'customername', title: '客户名称', align: 'center',width:"120"}
+                , {field: 'customertel', title: '客户电话', align: 'center',width:"120"}
+                , {field: 'connectionperson', title: '联系人', align: 'center',width:"80"}
+                , {field: 'type', title: '业务类型', align: 'center',width:"100"}
+                , {field: 'paytype', title: '支付方式', align: 'center',width:"120"}
+                , {field: 'price', title: '金额', align: 'center',width:"120",templet:"#priceTpl"}
+                , {field: 'dailitime', title: '代理记账', align: 'center',width:"150"}
+                , {field: 'starttime', title: '记账开始', align: 'center',width:"150"}
+                , {field: 'endtime', title: '记账结束', align: 'center',width:"150"}
+                , {field: 'cuizhangtime', title: '催账时间', align: 'center',width:"150"}
+                , {fixed: 'right', title: '操作', toolbar: '#debtRowBar', align: 'center',width:'350'}//绑定行工具栏
+            ] ],done: function(res, curr, count){//回调函数处理删除某一页最后一条数据的bug
+                  if (res.data.length==0 && curr!= 1){
+                      tableIns.reload({
+                          page: {curr: (curr - 1)}
+                      })
+                  }
+              }
+        });
+
+
+        tableIns2 = table.render({
+            elem: '#debtTable2'
+            , url: '/debt/loadCzDebt'
+            , title: '催账客户表'
+            , height: 'full-220'
+            , page: true
+            , cols: [ [
+                {type:'checkbox',align:'center'}
+                , {field: 'id', title: 'ID', align: 'center',width:"50"}
+                , {field: 'customername', title: '客户名称', align: 'center',width:"120"}
+                , {field: 'customertel', title: '客户电话', align: 'center',width:"120"}
+                , {field: 'connectionperson', title: '联系人', align: 'center',width:"80"}
+                , {field: 'type', title: '业务类型', align: 'center',width:"100"}
+                , {field: 'paytype', title: '支付方式', align: 'center',width:"120"}
+                , {field: 'price', title: '金额', align: 'center',width:"120",templet:"#priceTpl"}
+                , {field: 'dailitime', title: '代理记账', align: 'center',width:"150"}
+                , {field: 'starttime', title: '记账开始', align: 'center',width:"150"}
+                , {field: 'endtime', title: '记账结束', align: 'center',width:"150"}
+                , {field: 'cuizhangtime', title: '催账时间', align: 'center',width:"150"}
+                , {fixed: 'right', title: '操作', toolbar: '#debtRowBar', align: 'center',width:'350'}//绑定行工具栏
+            ] ],done: function(res, curr, count){//回调函数处理删除某一页最后一条数据的bug
+                if (res.data.length==0 && curr!= 1){
+                    tableIns.reload({
+                        page: {curr: (curr - 1)}
+                    })
+                }
+            }
+        });
+
+
+        //加载查询的客户列表
+        $.get("/customer/loadAllCustomerForSelect", function (res) {
+            var select = $('#search_customerid');
+            var html = ' <option value="">请选择客户</option>';
+            $.each(res.data, function (index, item) {
+                html += '<option value=' + item.id + '>' + item.customername + '</option>'
+            });
+            select.html(html);
+
+            form.render("select");
+        });
+
+
+        //模糊查询表单提交
+        form.on("submit(doSearch)", function (data) {//data.field是form表单的查询条件
+            tableIns.reload({
+                where: data.field,
+                page: {curr: 1}
+            });
+            return false;
+        });
+
+        //监听工具条的事件
+        table.on('toolbar(debtTable)', function(obj){
+            switch(obj.event){
+                case 'add':
+                    openAddLayer();
+                    break;
+            };
+        });
+
+        //监听行工具条的事件
+        table.on('tool(debtTable)', function(obj){
+            var data =obj.data;
+            switch(obj.event){
+                case 'delete':
+                    deleteOne(data);
+                    break;
+                case 'update':
+                    openUpdateDebtLayer(data);
+                    break;
+                case 'audit':
+                    audit(data);
+                    break
+                case 'cz':
+                    cz(data);
+                    break
+            };
+        });
+
+        var mainIndex;
+        var url;
+
+        //打开添加的弹出层
+        function openAddLayer() {
+            mainIndex = layer.open({
+                type:1,
+                content:$("#addOrUpdate"),
+                area:['700px','500px'],
+                title:"新增催账单",
+                success:function () {
+                    $('#dataFrm')[0].reset();
+                    //将pid置空
+                    $("#id").val("");
+                    initProviderSelect();
+                    url="/debt/addDebt";
+                }
+            })
+        }
+
+        //打开修改的弹出层
+        function openUpdateDebtLayer(data) {
+            mainIndex = layer.open({
+                type:1,
+                content:$("#addOrUpdate"),
+                area:['700px','500px'],
+                title:"修改催账单",
+                success:function () {
+                    //将表单数据重置
+                    $('#dataFrm')[0].reset();
+                    //装载新数据
+                    form.val("dataFrm",data);
+                    initProviderSelect(data.customerid);
+                    $("#customerid").attr("disabled","disabled")
+                    //选中之前父级的客户 nodeID=data.pid
+                    //初始化id
+                    url="/debt/updateDebt";
+                }
+            })
+        }
+
+        //初始化上客户的下拉列表
+        function initProviderSelect(customerid){
+            $("#customerid").removeAttr("disabled","disabled")
+            //加载查询的客户列表
+            $.get("/customer/loadAllCustomerForSelect", function (res) {
+                var select = $('#customerid');
+                var html = ' <option value="">请选择客户</option>';
+                $.each(res.data, function (index, item) {
+                    html += '<option value=' + item.id + '>' + item.customername + '</option>'
+                });
+                select.html(html);
+                form.render("select");
+                select.val(customerid);
+            });
+        }
+
+
+
+        //添加和修改提交
+        form.on("submit(doSubmit)",function (data) {
+            console.log(data.field);
+            $.post(url,data.field,function (res) {
+                if (res.code==200){
+                    //添加或者修改成功刷新
+                    tableIns.reload();
+                    tableIns2.reload();
+                }
+                layer.msg(res.msg)
+                layer.close(mainIndex);
+            })
+            return false;
+        })
+
+
+
+        //删除一个
+        function deleteOne(data) {
+            layer.confirm('确定删除'+data.customername+'这个催账单吗?', {icon: 3, title: '提示'}, function (index) {
+                $.post("/debt/deleteDebt", {id: data.id}, function (res) {
+                    if (res.code == 200) {
+                        tableIns.reload();
+                        tableIns2.reload();
+                    }
+                    layer.msg(res.msg);
+                })
+                layer.close(index);
+            });
+        }
+
+        //审核
+        function audit(data) {
+            if(data.state == 1 ){
+                layer.msg("这个账单已经付款了");
+                return;
+            }
+            layer.confirm('确定'+data.customername+'这个催账单已收款吗?', {icon: 3, title: '提示'}, function (index) {
+                $.post("/debt/auditDebt", {id: data.id}, function (res) {
+                    if (res.code == 200) {
+                        tableIns.reload();
+                        tableIns2.reload();
+                    }
+                    layer.msg(res.msg);
+                })
+                layer.close(index);
+            });
+        }
+        //催账
+        function cz(data) {
+            if(data.state == 1 || data.state == 3){
+                layer.msg("这个账单已经催债了或者付款了");
+                return;
+            }
+            layer.confirm('确定'+data.customername+'这个催账单已催账吗?', {icon: 3, title: '提示'}, function (index) {
+                $.post("/debt/czDebt", {id: data.id}, function (res) {
+                    if (res.code == 200) {
+                        tableIns.reload();
+                        tableIns2.reload();
+                    }
+                    layer.msg(res.msg);
+                })
+                layer.close(index);
+            });
+        }
+
+        });
+
+</script>
+</body>
+</html>

@@ -52,6 +52,8 @@ public class UserRealm extends AuthorizingRealm {
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
         ActiverUser activerUser = (ActiverUser) principals.getPrimaryPrincipal();
         User user = activerUser.getUser();
+
+        ////获取权限
         List<String> permissions = activerUser.getPremissions();
         if (user.getType() == Constast.USER_TYPE_SUPER){
             info.addStringPermission("*:*");
@@ -69,7 +71,6 @@ public class UserRealm extends AuthorizingRealm {
             return null;
         }
         String loginname = (String)authenticationToken.getPrincipal();
-
         //条件构造器
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         //通过名字查询
@@ -81,19 +82,16 @@ public class UserRealm extends AuthorizingRealm {
             Collection<Session> sessions =sessionDAO .getActiveSessions();
             //遍历session集合
             for (Session session: sessions) {
+                System.out.println("USER_SESSION:"+session.getAttribute("USER_SESSION"));
                 User sysUser = (User)session.getAttribute("USER_SESSION");
                 // 如果session里面有当前登陆的，则证明是重复登陆的，则将其剔除
-                if( sysUser!=null ){
+                if( sysUser != null ){
                     if( loginname.equals( sysUser.getLoginname() ) ){
                         //将这个时间设置为0
                         session.setTimeout(0);
                     }
                 }
             }
-            //新增一个session
-            Session session = SecurityUtils.getSubject().getSession();
-            session.setAttribute("USER_SESSION", user);
-
             //创建一个带角色和权限的用户对象
             ActiverUser activerUser = new ActiverUser();
             //设置用户
@@ -129,7 +127,6 @@ public class UserRealm extends AuthorizingRealm {
             ByteSource credentialsSalt = ByteSource.Util.bytes(user.getSalt());
             //进行密码验证
             SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(activerUser,user.getPwd(),credentialsSalt,this.getName());
-
 
             return info;
         }

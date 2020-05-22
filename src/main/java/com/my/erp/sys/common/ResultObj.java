@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class ResultObj {
     //登录相关
     public static final ResultObj LOGIN_SUCCESS = new ResultObj(Constast.OK,"登陆成功");
+    public static final ResultObj LOGIN_SUCCESS_CUSTOMER = new ResultObj(Constast.CUSTOMER_OK,"登陆成功");
     public static final ResultObj LOGIN_ERROR_PASS = new ResultObj(Constast.ERROR,"用户名或密码不正确");
     public static final ResultObj LOGIN_ERROR_CODE = new ResultObj(Constast.ERROR,"验证码不正确");
     //删除
@@ -36,6 +37,7 @@ public class ResultObj {
     public static final ResultObj AUDIT_PASS = new ResultObj(Constast.OK,"审核通过");
     public static final ResultObj AUDIT_NOPASS = new ResultObj(Constast.OK,"审核不通过");
     public static final ResultObj AUDIT_ERROR = new ResultObj(Constast.ERROR,"审核失败");
+
     //用户名可用吗
     public static final ResultObj LOGINNAME_SUCCESS = new ResultObj(Constast.OK,"用户名可用");
     public static final ResultObj lOGINNNAE_ERROR = new ResultObj(Constast.ERROR,"用户名不可用");

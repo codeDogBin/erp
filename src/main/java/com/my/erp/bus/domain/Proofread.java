@@ -81,4 +81,10 @@ public class Proofread implements Serializable {
     @TableField(exist = false)
     private String auditingname;
 
+    private Date ywaudittime;
+
+    private Date cwaudittime;
+
+    private Date completetime;
+
 }

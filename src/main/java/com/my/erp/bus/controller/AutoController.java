@@ -111,7 +111,7 @@ public class AutoController {
     @Scheduled(cron = "0 0 23 * * *")
     //自动删除前一天生成的图片文件
     public void autoDeleteImg() {
-        logger.info("清理昨天的照片启动");
+        logger.info("清理当天的照片启动");
         String dirName = MyFileUtils.UPLOAD_PATH + DateUtil.format(new Date(), "yyyy-MM-dd");
         File dirFile = new File(MyFileUtils.UPLOAD_PATH + dirName);
         if (!dirFile.exists()) {

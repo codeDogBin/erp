@@ -93,8 +93,8 @@
         <!--行工具条-->
         <div id="proofreadRowBar" style="display:none">
             <button type="button" shiro:hasPermission="proofread:update" lay-event="update" class="layui-btn layui-btn  layui-btn-xs"><span class="layui-icon layui-icon-edit">修改</span></button>
-            <button type="button" shiro:hasPermission="proofread:audit" lay-event="caiwuaudit" class="layui-btn layui-btn layui-btn-warm  layui-btn-xs"><span class="layui-icon layui-icon-delete">审核</span></button>
-            <button type="button" shiro:hasPermission="proofread:proofread:viewproofread" lay-event="show" class="layui-btn layui-btn layui-btn-warm  layui-btn-xs"><span class="layui-icon layui-icon-delete">详情</span></button>
+            <button type="button" shiro:hasPermission="proofread:audit" lay-event="caiwuaudit" class="layui-btn layui-btn layui-btn-warm  layui-btn-xs"><span class="layui-icon layui-icon-auz">审核</span></button>
+            <button type="button" shiro:hasPermission="proofread:viewproofread" lay-event="show" class="layui-btn layui-btn layui-btn-primary  layui-btn-xs"><span class="layui-icon layui-icon-search">详情</span></button>
             <button type="button" shiro:hasPermission="proofread:delete" lay-event="delete" class="layui-btn layui-btn-danger  layui-btn-xs"><span class="layui-icon layui-icon-delete">删除</span></button>
         </div>
     </table>
@@ -168,21 +168,41 @@
                 </div>
             </div>
         </div>
+
         <div class="layui-form-item" id="submit">
             <div class="layui-inline-block" style="text-align: center">
-                <button type="button" class="layui-btn" lay-submit="" lay-filter="doSubmit" ><span class="layui-icon layui-icon-ok">提交</span></button>
+                <button type="button" class="layui-btn  layui-btn-primary showImg"  ><span class="layui-icon layui-icon-search">查看详情</span></button>
+                <button type="button" class="layui-btn" id="submit1" lay-submit="" lay-filter="doSubmit" ><span class="layui-icon layui-icon-ok">提交</span></button>
             </div>
         </div>
         <div class="layui-form-item" id="audit">
             <div class="layui-inline-block" style="text-align: center">
+                <button type="button" class="layui-btn layui-btn-primary showImg"  ><span class="layui-icon layui-icon-search">查看详情</span></button>
                 <button type="button" class="layui-btn" lay-submit="" lay-filter="doAudit"  ><span class="layui-icon layui-icon-ok">过审</span></button>
-                <button type="button" class="layui-btn layui-btn-danger" lay-submit="" lay-filter="unAuDit"  ><span class="layui-icon layui-icon-close">驳回</span></button>
+                <button type="button" class="layui-btn layui-btn-danger" lay-submit="" lay-filter="unAudit"  ><span class="layui-icon layui-icon-close">驳回</span></button>
             </div>
         </div>
     </form>
 </div>
 <!--添加和修改的弹出层结束-->
-
+<!--图片查看的轮播图开始-->
+<div class="layui-carousel" id="showImg" lay-filter="showImg" style="display: none">
+    <form class="layui-form layui-form-pane">
+    <div class="layui-col-md6 layui-col-xs6 layui-form-text"  style="padding: 5px">
+        <label class="layui-form-label magt3">顾客截图</label>
+        <div class="layui-upload-list thumbBox mag0 magt3" style="width:600px;height: 600px">
+            <img class="layui-upload-img thumbImg" style="cursor: not-allowed" id="customerImage3" title="点击上传顾客截图" src="/file/showImageByPath?path=img/default.jpg">
+        </div>
+    </div>
+    <div class="layui-col-md6 layui-col-xs6 layui-form-text" style="padding: 5px">
+        <label class="layui-form-label magt3">员工截图</label>
+        <div class="layui-upload-list thumbBox mag0 magt3" style="width:600px;height: 600px">
+            <img class="layui-upload-img thumbImg"  style="cursor: not-allowed" id= "operateImage3" title="点击上传员工截图" src="/file/showImageByPath?path=img/default.jpg" >
+        </div>
+    </div>
+    </form>
+</div>
+<!--图片查看的轮播图结束-->
 
 
 
@@ -195,6 +215,7 @@
         var $ = layui.jquery;
         var form = layui.form;
         var table = layui.table;
+        var carousel = layui.carousel;
         var layer = layui.layer;
         var laydate = layui.laydate;
         var upload = layui.upload;
@@ -237,8 +258,6 @@
                 $('#operateimg').val(path);//给隐藏域赋值
             }
         });
-
-
 
 
         //加载查询的客户列表
@@ -394,10 +413,9 @@
         }
 
 
-
         //打开修改的弹出层
         function openUpdateProofreadLayer(data) {
-            if(data.auditingid == 4){
+            if(data.auditingid == 4 || data.auditingid == 10 || data.auditingid ==11){
              layer.msg('已经审核通过了');
              return;
             }
@@ -435,7 +453,6 @@
                     }else {
                         $("#customerid").attr("disabled",true);
                     }
-
                     //初始化id
                     url="/proofread/updateProofread";
                 }
@@ -450,7 +467,7 @@
                 title:"查看业务单",
                 success:function () {
                     initdata(data);
-                    $('#submit').css('display','none');
+                    $('#submit1 ').css('display','none');
                     //设置哪些部分可以使用
                     $("#operateImage").css("display","none");//将真实的隐藏
                     $("#operateImage2").css("display","inline-block");//将无法上传的组件显示出来
@@ -467,10 +484,25 @@
             })
         }
 
+        $(".showImg").on("click",function showImg() {
+                mainIndex = layer.open({
+                    type:1,
+                    content:$("#showImg"),
+                    area:['1250px','750px'],
+                    title:"查看详情",
+                    success:function () {
+                        //初始化id
+                    }
+                })
+            }
+        )
+
+
+
         //打开审核的弹出层
         function caiwuaudit(data) {
             var auditingid = data.auditingid;
-            if(auditingid == 4 || auditingid == 3  || auditingid == 6){
+            if(auditingid == 4 || auditingid == 3  || auditingid == 6 || auditingid == 10 || auditingid == 11 ){
                 layer.msg('已经审核通过了');
                 return;
             }
@@ -478,7 +510,7 @@
                 type:1,
                 content:$("#addOrUpdate"),
                 area:['645px','730px'],
-                title:"修改业务单",
+                title:"审核业务单",
                 success:function () {
                     initdata(data);
                     $("#customerImage2").css("display","inline-block");
@@ -509,6 +541,7 @@
             $("#remark").attr("disabled",false);
             //控制提交按钮
             $('#submit').css('display','inline');
+            $('#submit1').css('display','inline');
             $('#audit').css('display','none');
              //初始化表单数据
             if(data == undefined){
@@ -535,8 +568,10 @@
                 initProviderSelect(data.customerid);
                 $("#customerImage").attr("src","/file/showImageByPath?path="+data.customerimg);
                 $("#customerImage2").attr("src","/file/showImageByPath?path="+data.customerimg);
+                $("#customerImage3").attr("src","/file/showImageByPath?path="+data.customerimg);
                 $("#operateImage").attr("src","/file/showImageByPath?path="+data.operateimg);
                 $("#operateImage2").attr("src","/file/showImageByPath?path="+data.operateimg);
+                $("#operateImage3").attr("src","/file/showImageByPath?path="+data.operateimg);
                 $("#customerimg").attr("value",data.customerimg);//设置默认值
                 $("#operateimg").attr("value",data.operateimg);
             }
@@ -560,9 +595,8 @@
 
 
 
-        //财务审核
+        //提交修改
         form.on("submit(doSubmit)",function (data) {
-            console.log(data.field);
             $.post(url,data.field,function (res) {
                 if (res.code==200){
                     //添加或者修改成功刷新
@@ -578,8 +612,10 @@
         form.on("submit(unAudit)",function (data) {
             var id = parseInt(data.field.id);
             var operateimg = data.field.operateimg;
-            if(operateimg === 'img/default.jpg'){
+            console.log(operateimg);
+            if(operateimg == 'img/default.jpg' || operateimg == null){
                 layer.msg('您还未上传图片,请先上传图片再审核');
+                return;
             }
             $.post('/proofread/caiwuAuditProofread',{id:id,operateimg:operateimg,audit:false},function (res) {
                 if (res.code==200){
@@ -595,8 +631,9 @@
         form.on("submit(doAudit)",function (data) {
             var id = parseInt(data.field.id);
             var operateimg = data.field.operateimg;
-            if(operateimg === 'img/default.jpg'){
+            if(operateimg == 'img/default.jpg'|| operateimg == null ){
                 layer.msg('您还未上传图片,请先上传图片再审核');
+                return;
             }
             $.post('/proofread/caiwuAuditProofread',{id:id,operateimg:operateimg,audit:true},function (res) {
                 if (res.code==200){
@@ -613,7 +650,7 @@
         //删除一个
         function deleteOne(data) {
             var auditingid = data.auditingid;
-            if(auditingid == 2 || auditingid == 3 || auditingid== 4 || auditingid==6 || auditingid==8 ) {
+            if(auditingid != 1 && auditingid != 5 && auditingid != 7 && auditingid != 9  ) {
                 layer.msg("该数据已审核,不能删除");
                 return;
             }
@@ -627,7 +664,7 @@
                 layer.close(index);
             });
         }
-        
+
 
         form.on('submit(doBackSubmit)',function (data) {
             $.post('/outport/addOutport',data.field,function (res) {

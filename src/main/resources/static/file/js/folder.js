@@ -1,3 +1,4 @@
+
 $(function () {
     load();
 })
@@ -133,7 +134,8 @@ function loadFolderAndFil(folders,fils) {
     if (folders.length+fils.length==0){
         showMsg("当前目录没有文件");
     }
-    console.log(fils);
+    var customerid=$("#customerid").val();
+    console.log(customerid)
     //加载文件夹和文件
     var html="";
     $.each(folders,function (index,item) {
@@ -141,31 +143,30 @@ function loadFolderAndFil(folders,fils) {
             '<div class="imgSize">\n'+
             '<img src="/file/showImageByPath?path=img/folder.jpg"  alt='+item.name+'>\n' +
             '</div>\n'+
-            '<div class="fileName"><a href="javascript:void(0);" onclick="toFolder('+item.id+')">'+item.name+'</a></div>\n' +
-            '<div  class="functionBtn" shiro:hasPermission="folder:update" >\n' +
-            '<button class="btn2" onclick="renameFolder('+item.id+')">重命名</button>\n' +
-            '<button class="btn2" onclick="delFolder('+item.id+')">删除</button>\n' +
-            '</div>\n' +
-            '</li>';
+            '<div class="fileName"><a href="javascript:void(0);" onclick="toFolder('+item.id+')">'+item.name+'</a></div>\n';
+        if(customerid == 0){
+            html += '<div  class="functionBtn" shiro:hasPermission="folder:update" >\n' +
+                '<button class="btn2" onclick="renameFolder('+item.id+')">重命名</button>\n' +
+                '<button class="btn2" onclick="delFolder('+item.id+')">删除</button>\n' +
+                '</div>\n';
+        }
+           html += '</li>';
     });
     $.each(fils,function (index,item) {
         html +='<li>\n' +
             '<div class="imgSize">\n'+
-            '<img src="/file/showImageByPath?path='+item.imgway+'" "  alt='+item.name+'>\n'+
+            '<img src="/file/showImageByPath?path='+item.imgway+'" alt='+item.name+'>\n'+
             '</div>\n'+
-            '<div class="fileName"><a href="/bus/getFile.do?id=\'+item.id+\'&name=\'+item.name+\'">'+item.name+'</a></div>\n' +
-            '<div class="functionBtn">\n' +
-            '<button class="btn2" onclick="renameFil('+item.id+')">重命名</button>\n' +
-            '<button class="btn2" onclick="delFil('+item.id+')">删除</button>\n' +
-            '</div>\n' +
-            '</li>';
+            '<div class="fileName"><a href="/bus/getFile.do?id='+item.id+'&name='+item.name+'">'+item.name+'</a></div>\n';
+        if(customerid == 0) {
+            html += '<div class="functionBtn" shiro:hasPermission="folder:update">\n' +
+            '<button class="btn2" onclick="renameFil(' + item.id + ')">重命名</button>\n' +
+            '<button class="btn2" onclick="delFil(' + item.id + ')">删除</button>\n' +
+            '</div>\n';
+        }
+        html +=  '</li>';
     });
     $("#folderSpace").html(html);
-    // $(".folderZone img").on("click",function(){
-    //     console.log($(".folderZone #fileName a").attr("href"));
-    //     let url = $(".folderZone #fileName a").attr("href");
-    //     window.open("http://127.0.0.1:8080" + url);
-    // });
 }
 //创建文件夹
 function createFolder(){

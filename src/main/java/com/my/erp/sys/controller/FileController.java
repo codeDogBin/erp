@@ -8,8 +8,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -56,11 +58,12 @@ public class FileController {
      * 文件下载
      */
     @RequestMapping("showImageByPath")
-    public ResponseEntity  showImageByPath(String path){
+    public void showImageByPath(String path, HttpServletResponse response) throws IOException {
         if (StringUtils.isNoneBlank(path)){
-            return MyFileUtils.createResponseEntity(path);
+            OutputStream outputStream = MyFileUtils.createResponseEntity(path, response);
+            outputStream.flush();
+            outputStream.close();
         }
-        return null;
     }
 
 }

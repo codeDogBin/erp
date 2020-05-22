@@ -150,14 +150,14 @@
         <div class="layui-form-item">
             <label class="layui-form-label" >是否为客户</label>
             <div class="layui-input-inline" id="iscustomer" >
-                <input type="radio" lay-filter="iscustomer" name="iscustomer" value="1" title="是" checked="">
-                <input type="radio" lay-filter="iscustomer" name="iscustomer" value="0" title="否">
+                <input type="radio" lay-filter="iscustomer" name="iscustomer" value="1" title="是" >
+                <input type="radio" lay-filter="iscustomer" name="iscustomer" value="0" title="否" checked="">
             </div>
             <div class="layui-inline">
                 <label class="layui-form-label">客户</label>
                 <div class="layui-input-inline">
                     <select name="customerid" id="search_customerid"  lay-search="">
-                        <option value="">请选择客户</option>
+                        <option value="0">请选择客户</option>
                     </select>
                 </div>
             </div>
@@ -241,15 +241,20 @@
         });
 
         //加载查询的客户列表
-        $.get("/customer/loadAllCustomerForSelect", function (res) {
-            var select = $('#search_customerid');
-            var html = ' <option value="">请选择客户</option>';
-            $.each(res.data, function (index, item) {
-                html += '<option value=' + item.id + '>' + item.customername + '</option>'
+        function getCustomer(){
+            $.get("/customer/loadAllCustomerForSelect", function (res) {
+                var select = $('#search_customerid');
+                var html = ' <option value="0">请选择客户</option>';
+                $.each(res.data, function (index, item) {
+                    html += '<option value=' + item.id + '>' + item.customername + '</option>'
+                });
+                select.html(html);
+                form.render("select");
             });
-            select.html(html);
-            form.render("select");
-        });
+        }
+
+        getCustomer();
+
 
 
         //模糊查询表单提交
@@ -299,13 +304,13 @@
             mainIndex = layer.open({
                 type:1,
                 content:$("#addOrUpdate"),
-                area:['700px','500px'],
+                area:['700px','600px'],
                 title:"添加用户",
                 success:function () {
                     $('#dataFrm')[0].reset();
                     $("#deptid").val("");
                     $("#loginname").css("border-color","#e6e6e6");
-                    $("#search_customerid").removeAttr('disabled','disabled');
+                    $("#search_customerid").attr('disabled','disabled');
                     $("#iscustomer input").removeAttr('disabled','disabled');
                     url="/user/addUser";
                     //初始化排序码
@@ -315,6 +320,7 @@
                     var html = "<option value='0'>请选择直属领导</option>";
                     $("#mgr").html(html);
                     //重新渲染
+                    getCustomer();
                     form.render("select");
                 }
             })
@@ -325,7 +331,7 @@
             mainIndex = layer.open({
                 type:1,
                 content:$("#addOrUpdate"),
-                area:['700px','500px'],
+                area:['700px','600px'],
                 title:"修改用户",
                 success:function () {
                     //将表单数据重置

@@ -2,14 +2,17 @@ package com.my.erp.sys.common;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.IdUtil;
+import net.coobird.thumbnailator.Thumbnailator;
+import net.coobird.thumbnailator.Thumbnails;
+import net.coobird.thumbnailator.util.ThumbnailatorUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.util.Properties;
 
 /**
@@ -57,21 +60,13 @@ public class MyFileUtils {
      * 文件下载
      * @return
      */
-    public static ResponseEntity createResponseEntity(String path) {
+    public static  OutputStream createResponseEntity(String path, HttpServletResponse response) throws IOException {
+        ServletOutputStream outputStream = response.getOutputStream();
+        response.setContentType("application/octet-stream");
         //1构造文件对象
         File file = new File(UPLOAD_PATH,path);
-        byte[] bytes = null;
-        if(file.exists()){
-            bytes = FileUtil.readBytes(file);
-            //创建封装响应头信息的对象
-            HttpHeaders headers = new HttpHeaders();
-            //封装相应内容类型
-            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-            //创建ResponseEntity对象
-            ResponseEntity entity = new ResponseEntity(bytes,headers, HttpStatus.CREATED);
-            return entity;
-        }
-        return  null;
+        Thumbnails.of(file).size(800,800).outputQuality(0.3f).toOutputStream(outputStream);
+        return outputStream;
     }
 
     /**

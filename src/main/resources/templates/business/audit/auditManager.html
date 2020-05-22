@@ -92,6 +92,8 @@
         <!--行工具条-->
         <div id="proofreadRowBar" style="display:none">
             <button type="button" lay-event="update" class="layui-btn layui-btn-warm  layui-btn-xs"><span class="layui-icon layui-icon-edit">审核</span></button>
+            <button type="button" lay-event="complete" class="layui-btn  layui-btn-xs"><span class="layui-icon layui-icon-ok">业务完成</span></button>
+            <button type="button" lay-event="stop" class="layui-btn layui-btn-danger  layui-btn-xs"><span class="layui-icon layui-icon-close">退款</span></button>
         </div>
     </table>
 </div>
@@ -140,8 +142,6 @@
     </form>
 </div>
 <!--添加和修改的弹出层结束-->
-
-
 
 <script type="text/javascript" src="/resources/layui/layui.js"></script>
 <script>
@@ -214,18 +214,18 @@
                 , {field: 'paytype', title: '支付方式', align: 'center',width:"80"}
                 , {field: 'depttitle', title: '部门名称', align: 'center',width:"120"}
                 , {field: 'auditingname', title: '审核状态', align: 'center',width:"150",templet:function (d) {
-                          if (d.auditingid==4||d.auditingid==2||d.auditingid==8 ){
-                              return '<font color="#01AAED">'+d.auditingname+'</font>';
+                          if (d.auditingid==4 ){
+                              return '<font color="#009688">'+d.auditingname+'</font>';
                           }else if(d.auditingid== 1||d.auditingid == 3||d.auditingid==7 ){
                               return  '<font color="#FFB800">'+d.auditingname+'</font>';
                           }else {
-                              return  '<font color="#009688">'+d.auditingname+'</font>';
+                              return  '<font color="#01AAED">'+d.auditingname+'</font>';
                           }
                       }}
                 , {field: 'createtime', title: '创建时间', align: 'center',width:"180"}
                 , {field: 'remark', title: '备注', align: 'center',width:"250"}
                 , {field: 'operateperson', title: '操作员', align: 'center',width:"110"}
-                , {fixed: 'right', title: '操作', toolbar: '#proofreadRowBar', align: 'center',width:'100'}//绑定行工具栏
+                , {fixed: 'right', title: '操作', toolbar: '#proofreadRowBar', align: 'center',width:'300'}//绑定行工具栏
             ] ],done: function(res, curr, count){//回调函数处理删除某一页最后一条数据的bug
                   if (res.data.length==0 && curr!= 1){
                       tableIns.reload({
@@ -245,7 +245,6 @@
             return false;
         });
 
-
         //监听行工具条的事件
         table.on('tool(proofreadTable)', function(obj){
             var data =obj.data;
@@ -253,8 +252,17 @@
                 case 'update':
                     openUpdateProofreadLayer(data);
                     break;
+                case 'complete':
+                    complete(data);
+                    break;
+                case 'stop':
+                    stop(data);
+                    break;
             };
         });
+
+
+
         //添加或修改的面板
         var mainIndex;
         //添加或修改的url
@@ -270,7 +278,7 @@
             mainIndex = layer.open({
                 type:1,
                 content:$("#addOrUpdate"),
-                area:['640px','750px'],
+                area:['640px','450px'],
                 title:"提交业务内容",
                 success:function () {
                     //加载复选框内容
@@ -320,6 +328,44 @@
             })
             return false;
         })
+
+        //确认完成
+        function complete(data) {
+            if(data.auditingid != 4 ){
+                layer.msg("当前项目未审核完毕或已经结束,不允许完成");
+                return;
+            }
+            layer.confirm("确认完成吗?",{icon: 3, title:'提示'},function () {
+                $.post('/proofread/completeProofread',{id:data.id},function (res) {
+                    if (res.code==200){
+                        //添加或者修改成功刷新
+                        tableIns.reload();
+                    }
+                    layer.msg(res.msg)
+                    layer.close(mainIndex);
+                })
+            });
+            return false;
+        }
+
+        //终止合作
+       function stop(data) {
+           if(data.auditingid != 4 ){
+               layer.msg("当前项目未审核完毕或已经结束,不允许退款");
+               return;
+           }
+           layer.confirm("确认退款吗?",{icon: 3, title:'提示'},function () {
+               $.post('/proofread/stopProofread',{id:data.id},function (res) {
+                   if (res.code==200){
+                       //添加或者修改成功刷新
+                       tableIns.reload();
+                   }
+                   layer.msg(res.msg)
+                   layer.close(mainIndex);
+               })
+           });
+            return false;
+        }
     });
 
 </script>

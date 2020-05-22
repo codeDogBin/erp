@@ -256,6 +256,7 @@ public class ProofreadController {
             //设置当前表单的新状态和审核内容
             proofread.setAuditingid(auditingid);
             proofread.setAuditcontent(auditcontent);
+            proofread.setYwaudittime(new Date());
             proofreadService.updateById(proofread);
             return resultObj;
         } catch (Exception e) {
@@ -268,7 +269,6 @@ public class ProofreadController {
 
     /**
      * 财务审核业务表
-     *
      * @param operateimg
      * @return
      */
@@ -303,6 +303,7 @@ public class ProofreadController {
                 resultObj = ResultObj.AUDIT_NOPASS;
             }
             proofread.setAuditingid(auditingid);
+            proofread.setCwaudittime(new Date());
             proofreadService.updateById(proofread);
             return resultObj;
         } catch (Exception e) {
@@ -313,7 +314,50 @@ public class ProofreadController {
     }
 
     /**
-     *
+     * 确认完成
+     * @param
+     * @return
+     */
+    @RequestMapping("/completeProofread")
+    public ResultObj completeProofread(Integer id) {
+        try {
+            System.out.println(id);
+            Proofread proofread = proofreadService.getById(id);
+            proofread.setAuditingid(Constast.AUDITING_COMPLETE);
+            proofread.setCompletetime(new Date());
+            proofreadService.updateById(proofread);
+            return ResultObj.OPERATE_SUCCESS;
+        } catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return ResultObj.OPERATE_ERROR;
+        }
+    }
+
+    /**
+     * 确认退款
+     * @param
+     * @return
+     */
+    @RequestMapping("/stopProofread")
+    public ResultObj stopProofread(Integer id) {
+        try {
+            Proofread proofread = proofreadService.getById(id);
+            proofread.setAuditingid(Constast.AUDITING_STOP);
+            proofread.setCompletetime(new Date());
+            proofreadService.updateById(proofread);
+            return ResultObj.OPERATE_SUCCESS;
+        } catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return ResultObj.OPERATE_ERROR;
+        }
+    }
+
+
+
+    /**
+     * 得到提醒数量
      */
     @RequestMapping("getMassage")
     public Integer getMassage(HttpSession session) {

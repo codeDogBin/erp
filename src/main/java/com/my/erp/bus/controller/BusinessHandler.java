@@ -52,7 +52,7 @@ public class BusinessHandler {
     }
 
     /**
-     * 跳转到退货查询管理
+     * 跳转到业务管理
      */
     @RequestMapping("toProofreadManager")
     public String toProofreadManager() {
@@ -60,7 +60,14 @@ public class BusinessHandler {
     }
 
     /**
-     * 跳转到退货查询管理
+     * 跳转到催债管理
+     */
+    @RequestMapping("toDebt")
+    public String toDebt() {
+        return "business/debt/debtManager";
+    }
+    /**
+     * 跳转到审核管理
      */
     @RequestMapping("toAuditManager")
     public String toAuditManager() {

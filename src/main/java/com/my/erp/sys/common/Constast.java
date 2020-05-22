@@ -8,6 +8,7 @@ public interface Constast {
      * 状态码
      */
     Integer OK = 200;
+    Integer CUSTOMER_OK = 201;
     Integer ERROR = -1;
     /**
      * 菜单权限
@@ -53,6 +54,21 @@ public interface Constast {
     Integer AUDITING_YENO_CARE = 7;
     Integer AUDITING_YEPA_CARE = 8;
     Integer AUDITING_YERE_CARE = 9;
+    Integer AUDITING_COMPLETE = 10;
+    Integer AUDITING_STOP = 11;
 
 
+    /**
+     *
+      * 功能描述
+      * @Author bin
+      * @param null 
+      * @return         
+      */
+
+    Integer STATE_YF=1;
+    Integer STATE_ZZJSWF=2;
+    Integer STATE_CZYCWF=3;
+    Integer STATE_CZWCWF=4;
+    
 }
