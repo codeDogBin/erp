@@ -15,7 +15,6 @@ import com.my.erp.sys.common.Constast;
 import com.my.erp.sys.common.DataGridView;
 import com.my.erp.sys.common.ResultObj;
 import com.my.erp.sys.config.Log;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -58,7 +57,7 @@ public class DebtController {
         //创建条件器
         QueryWrapper<Debt> queryWrapper = new QueryWrapper<>();
         //设置条件
-        queryWrapper.like(StringUtils.isNoneBlank(debtVo.getCustomername()),"customername",debtVo.getCustomername());
+        queryWrapper.eq(debtVo.getCustomerid()!=null,"customerid",debtVo.getCustomerid());
         queryWrapper.ge(debtVo.getStartTime() != null, "cuizhangtime", debtVo.getStartTime());
         queryWrapper.le(debtVo.getEndTime() != null, "cuizhangtime", debtVo.getEndTime());
         //查询

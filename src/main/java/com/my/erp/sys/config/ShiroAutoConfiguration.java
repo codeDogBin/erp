@@ -33,7 +33,6 @@ import java.util.Map;
 @Configuration
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 @ConditionalOnClass()
-@EnableConfigurationProperties
 @ConfigurationProperties(prefix = "shiro")
 @Data
 public class ShiroAutoConfiguration {
@@ -56,7 +55,7 @@ public class ShiroAutoConfiguration {
     }
 
 
-    // 配置sessionDAO s
+    // 配置sessionDAOs
     @Bean(name="sessionDAO")
     public MemorySessionDAO getMemorySessionDAO(){
         MemorySessionDAO sessionDAO = new MemorySessionDAO();
